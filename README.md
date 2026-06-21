@@ -1,4 +1,4 @@
-# RemoteKm — turn your phone into a wireless mouse & keyboard
+# RemoteKM — turn your phone into a wireless mouse & keyboard
 
 RemoteKm lets you control your Windows PC from your Android phone over your home Wi-Fi.
 Use your phone as a trackpad and a full keyboard — no cables, no internet, no account.
@@ -12,6 +12,9 @@ Use your phone as a trackpad and a full keyboard — no cables, no internet, no 
 - Both on the **same Wi-Fi / network**.
 
 ## Get the two apps
+
+> [!TIP]
+> Get the already built apps from release page
 
 RemoteKm comes as two parts: a small PC app and a phone app.
 
@@ -31,9 +34,15 @@ it lives in the system tray (next to the clock). Nothing else needs to be instal
 dotnet publish RemoteKm.Client -f net10.0-android -c Release
 ```
 
-This creates one `.apk` (under `RemoteKm.Client\bin\Release\net10.0-android\publish\`,
-named `com.remotekm.client-Signed.apk`). Copy it to your phone and tap to install
+Install the file named **`RemoteKm.apk`** (under
+`RemoteKm.Client\bin\Release\net10.0-android\`). Copy it to your phone and tap to install
 (you may need to allow "install from unknown sources").
+
+> **Install the right file.** The build folder also contains `com.remotekm.client.apk`, which
+> is **unsigned and will fail to install** ("App not installed"). Always use **`RemoteKm.apk`**
+> (the signed one). If you previously installed an older RemoteKm build, **uninstall it first** —
+> this version is signed with a new, stable key, so it won't install on top of a differently
+> signed copy. After this one, future updates install over each other normally.
 
 ### One-time PC setup (important)
 
@@ -44,7 +53,7 @@ connections:
 netsh http add urlacl url=http://+:45455/ user=Everyone
 ```
 
-And allow it through the firewall (also as Administrator):
+And allow it through the firewall (also as Administrator, only if needed):
 
 ```powershell
 New-NetFirewallRule -DisplayName "RemoteKm UDP" -Direction Inbound -Action Allow -Protocol UDP -LocalPort 45454
@@ -130,6 +139,8 @@ If you skip the first command, the PC app will pop up a reminder with the exact 
   isolation") — turn that off, or connect by IP / QR code.
 - **It finds the PC but won't connect:** run the one-time `netsh …urlacl…` command above (or
   run the PC app as Administrator).
+- **"App not installed":** make sure you're installing **`RemoteKm.apk`** (not
+  `com.remotekm.client.apk`, which is unsigned), and uninstall any older RemoteKm build first.
 - **Camera won't scan:** allow the camera permission when the phone asks.
 - **Something's wrong:** grab the logs — PC: Settings → **Open logs folder**; phone: Status →
   **Export logs** — they record what happened.

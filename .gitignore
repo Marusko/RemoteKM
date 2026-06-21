@@ -41,6 +41,10 @@ artifacts/
 # Android signing / local config
 **/Platforms/Android/*.keystore
 
+# Local Android signing config (keystore path + passwords) — never commit.
+# Use Directory.Build.props.template as the starting point.
+/RemoteKm.Client/Directory.Build.props
+
 # ---- Test results ----
 [Tt]est[Rr]esult*/
 *.trx
