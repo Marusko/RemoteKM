@@ -6,7 +6,7 @@
              BackgroundColor="{StaticResource RkBg}">
     <ScrollView Padding="20">
         <VerticalStackLayout Spacing="14">
-            <Label Text="RemoteKm" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource RkText}" />
+            <Label Text="RemoteKM" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource RkText}" />
             <Border Style="{StaticResource RkCard}">
                 <Label x:Name="LicenseText" FontSize="14" TextColor="{StaticResource RkText}" LineHeight="1.35" />
             </Border>

@@ -6,7 +6,7 @@ public static class Attributions
     public const string IconsCredit = "Icons by Axialis — https://www.axialis.com";
 
     public const string Text =
-        "RemoteKm\n\n" +
+        "RemoteKM\n\n" +
         "Icons by Axialis — https://www.axialis.com\n\n" +
         "Open-source components and their licenses:\n\n" +
         "• CommunityToolkit.Maui — MIT (© .NET Foundation and Contributors)\n" +

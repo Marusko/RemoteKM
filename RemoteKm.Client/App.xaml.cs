@@ -12,7 +12,7 @@ public partial class App : Application
 		InitializeComponent();
 		_services = services;
 
-		AppLog.Info("RemoteKm client starting.");
+		AppLog.Info("RemoteKM client starting.");
 		AppDomain.CurrentDomain.UnhandledException += (_, e) =>
 			AppLog.Error("Unhandled exception", e.ExceptionObject as Exception);
 		TaskScheduler.UnobservedTaskException += (_, e) =>

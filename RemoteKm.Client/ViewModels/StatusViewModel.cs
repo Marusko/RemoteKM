@@ -83,7 +83,7 @@ public partial class StatusViewModel : ObservableObject
             }
             await Share.Default.RequestAsync(new ShareFileRequest
             {
-                Title = "RemoteKm logs",
+                Title = "RemoteKM logs",
                 File = new ShareFile(AppLog.LogFile),
             });
         }
