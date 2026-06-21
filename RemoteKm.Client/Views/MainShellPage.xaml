@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RemoteKm.Client.Views.MainShellPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{StaticResource RkBg}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="RailColumn" Width="84" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left navigation rail -->
+        <Border Grid.Column="0" x:Name="RailBorder" Margin="6" Padding="6"
+                BackgroundColor="{StaticResource RkSurface}"
+                Stroke="{StaticResource RkStroke}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 18">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" RowSpacing="10">
+                <Border Grid.Row="0" x:Name="NavCollapse" HorizontalOptions="Fill" HeightRequest="40"
+                        BackgroundColor="Transparent" StrokeThickness="0" StrokeShape="RoundRectangle 12" />
+                <Border Grid.Row="1" x:Name="NavTrackpad" Style="{StaticResource RkNavTile}" />
+                <Border Grid.Row="2" x:Name="NavKeyboard" Style="{StaticResource RkNavTile}" />
+                <Border Grid.Row="3" x:Name="NavStatus" Style="{StaticResource RkNavTile}" />
+                <Border Grid.Row="5" x:Name="NavDisconnect" Style="{StaticResource RkNavTile}" />
+            </Grid>
+        </Border>
+
+        <!-- Content host -->
+        <Grid Grid.Column="1" x:Name="ContentHost" Margin="0,6,6,6" />
+
+        <!-- Small floating expand button (shown when the rail is collapsed) -->
+        <Border Grid.Column="1" x:Name="FloatingExpand" IsVisible="False"
+                HorizontalOptions="Start" VerticalOptions="Start" Margin="4"
+                WidthRequest="38" HeightRequest="38"
+                BackgroundColor="{StaticResource RkSurfaceAlt}"
+                StrokeThickness="0" StrokeShape="RoundRectangle 10" />
+    </Grid>
+</ContentPage>

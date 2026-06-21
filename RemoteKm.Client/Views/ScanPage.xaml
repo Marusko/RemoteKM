@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:camera="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
+             x:Class="RemoteKm.Client.Views.ScanPage"
+             Title="Scan QR"
+             BackgroundColor="{StaticResource RkBg}">
+
+    <Grid>
+        <camera:CameraView x:Name="Camera" HorizontalOptions="Fill" VerticalOptions="Fill" />
+
+        <Border VerticalOptions="End" Margin="20" Padding="14"
+                BackgroundColor="{StaticResource RkSurface}"
+                Stroke="{StaticResource RkStroke}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 14">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label Grid.Column="0" VerticalOptions="Center"
+                       Text="Point the camera at the host's QR code"
+                       TextColor="{StaticResource RkText}" />
+                <Button Grid.Column="1" Text="Cancel" Style="{StaticResource RkGhostButton}"
+                        Clicked="OnCancel" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

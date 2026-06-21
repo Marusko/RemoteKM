@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RemoteKm.Client.ViewModels"
+             x:Class="RemoteKm.Client.Views.DiscoveryPage"
+             x:Name="Page"
+             x:DataType="vm:DiscoveryViewModel"
+             BackgroundColor="{StaticResource RkBg}"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid ColumnDefinitions="*,*" Padding="16" ColumnSpacing="16" Margin="0,5,0,0">
+
+        <!-- Discovered hosts -->
+        <Grid Grid.Column="0" RowDefinitions="Auto,*" RowSpacing="10">
+            <Label Grid.Row="0" Text="Hosts on your network" FontSize="16" FontAttributes="Bold"
+                   TextColor="{StaticResource RkText}" />
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding Hosts}"
+                            SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="24" VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                        <ActivityIndicator IsRunning="True" Color="{StaticResource RkAccent}" />
+                        <Label Text="Searching for hosts on your network…"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{StaticResource RkMuted}" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:HostItem">
+                        <Grid Padding="0,4">
+                            <Border Style="{StaticResource RkCard}">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.ConnectToHostCommand, Source={x:Reference Page}}"
+                                        CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                                    <Ellipse Grid.Column="0" WidthRequest="12" HeightRequest="12"
+                                             VerticalOptions="Center">
+                                        <Ellipse.Triggers>
+                                            <DataTrigger TargetType="Ellipse" Binding="{Binding IsActive}" Value="True">
+                                                <Setter Property="Fill" Value="{StaticResource RkSuccess}" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Ellipse" Binding="{Binding IsActive}" Value="False">
+                                                <Setter Property="Fill" Value="{StaticResource RkMuted}" />
+                                            </DataTrigger>
+                                        </Ellipse.Triggers>
+                                    </Ellipse>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding HostName}" FontSize="19" FontAttributes="Bold"
+                                               TextColor="{StaticResource RkText}" />
+                                        <Label Text="{Binding Endpoint}" FontSize="13" TextColor="{StaticResource RkMuted}" />
+                                        <Label Text="{Binding LastSeenText}" FontSize="11" TextColor="{StaticResource RkMuted}" />
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="2" Text="›" FontSize="28" VerticalOptions="Center"
+                                           TextColor="{StaticResource RkAccent}" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Connect panel -->
+        <Border Grid.Column="1" Style="{StaticResource RkCard}" VerticalOptions="Start">
+            <VerticalStackLayout Spacing="14">
+                <Label Text="Connect manually" FontSize="16" FontAttributes="Bold"
+                       TextColor="{StaticResource RkText}" />
+                <Entry Placeholder="Host IP (e.g. 192.168.1.20)" Text="{Binding ManualIp}"
+                       TextColor="{StaticResource RkText}" />
+                <Entry Placeholder="Port" Text="{Binding ManualPort}" Keyboard="Numeric"
+                       TextColor="{StaticResource RkText}" />
+                <Button Text="Connect" Command="{Binding ManualConnectCommand}"
+                        Style="{StaticResource RkPrimaryButton}" />
+                <Button Text="Scan QR code" Command="{Binding ScanQrCommand}"
+                        Style="{StaticResource RkGhostButton}" />
+                <Label Text="Tip: open “Show QR Code” from the host's tray icon."
+                       FontSize="11" TextColor="{StaticResource RkMuted}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Connecting overlay -->
+        <Grid Grid.ColumnSpan="2"
+              IsVisible="{Binding IsBusy}"
+              BackgroundColor="#CC0F1020">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+                <ActivityIndicator IsRunning="True" Color="{StaticResource RkAccent}" />
+                <Label Text="Connecting…" TextColor="White" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

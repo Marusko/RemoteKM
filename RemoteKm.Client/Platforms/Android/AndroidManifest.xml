@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.remotekm.client" android:versionCode="100" android:versionName="1.0.0">
+	<!-- usesCleartextTraffic allows the local ws:// control channel on the LAN. -->
+	<application android:allowBackup="true" android:supportsRtl="true" android:usesCleartextTraffic="true" android:label="RemoteKM" android:icon="@mipmap/icon" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+	<!-- Camera is used for optional QR-code scanning of the host's connect code. -->
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
+</manifest>

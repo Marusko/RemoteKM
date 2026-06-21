@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RemoteKm.Client.ViewModels"
+             x:Class="RemoteKm.Client.Views.StatusView"
+             x:DataType="vm:StatusViewModel">
+
+    <ScrollView Padding="16">
+        <VerticalStackLayout Spacing="16">
+
+            <Border Style="{StaticResource RkCard}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="CONNECTED TO" TextColor="{StaticResource RkMuted}" FontSize="11" />
+                    <Label Text="{Binding ConnectedTo}" FontSize="20" FontAttributes="Bold"
+                           TextColor="{StaticResource RkText}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="*,*" ColumnSpacing="12" RowSpacing="12">
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource RkCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="LATENCY" TextColor="{StaticResource RkMuted}" FontSize="11" />
+                        <Label Text="{Binding Latency}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource RkAccent2}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource RkCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="UPTIME" TextColor="{StaticResource RkMuted}" FontSize="11" />
+                        <Label Text="{Binding Uptime}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource RkText}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource RkCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="SENT" TextColor="{StaticResource RkMuted}" FontSize="11" />
+                        <Label Text="{Binding BytesSent}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource RkText}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource RkCard}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="RECEIVED" TextColor="{StaticResource RkMuted}" FontSize="11" />
+                        <Label Text="{Binding BytesReceived}" FontSize="22" FontAttributes="Bold"
+                               TextColor="{StaticResource RkText}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Button Grid.Column="0" Text="Export logs" Command="{Binding ExportLogsCommand}"
+                        Style="{StaticResource RkGhostButton}" />
+                <Button Grid.Column="1" Text="Licenses" Command="{Binding LicensesCommand}"
+                        Style="{StaticResource RkGhostButton}" />
+                <Button Grid.Column="2" Text="Disconnect" Command="{Binding DisconnectCommand}"
+                        Style="{StaticResource RkDangerButton}" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentView>

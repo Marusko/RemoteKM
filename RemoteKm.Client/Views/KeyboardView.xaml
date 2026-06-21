@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RemoteKm.Client.ViewModels"
+             x:Class="RemoteKm.Client.Views.KeyboardView"
+             x:DataType="vm:KeyboardViewModel">
+
+    <Grid RowDefinitions="Auto,*" Padding="6" RowSpacing="5">
+
+        <!-- Header: layout label + media + volume keys (icons added in code-behind) -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="5">
+            <!-- Left margin keeps the label clear of the floating expand button when the rail is collapsed. -->
+            <Label Grid.Column="0" x:Name="LayoutLabel" VerticalOptions="Center" Margin="46,0,0,0"
+                   TextColor="{StaticResource RkMuted}" FontSize="12" />
+
+            <Border Grid.Column="1" x:Name="MediaPrev" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+            <Border Grid.Column="2" x:Name="MediaPlay" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+            <Border Grid.Column="3" x:Name="MediaNext" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+            <Border Grid.Column="4" x:Name="VolDown" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+            <Border Grid.Column="5" x:Name="VolUp" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+            <Border Grid.Column="6" x:Name="VolMute" Padding="9,5" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                    StrokeThickness="0" StrokeShape="RoundRectangle 8" />
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1" x:Name="KeyboardRoot" Spacing="0" VerticalOptions="Center" />
+    </Grid>
+</ContentView>

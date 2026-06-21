@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="RemoteKm.Client/RemoteKm.Client.csproj" />
+  <Project Path="RemoteKm.Host/RemoteKm.Host.csproj" />
+  <Project Path="RemoteKm.Shared/RemoteKm.Shared.csproj" />
+</Solution>

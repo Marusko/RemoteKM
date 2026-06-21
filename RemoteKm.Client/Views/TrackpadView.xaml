@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RemoteKm.Client.ViewModels"
+             x:Class="RemoteKm.Client.Views.TrackpadView"
+             x:DataType="vm:TrackpadViewModel">
+
+    <Grid RowDefinitions="*,Auto" RowSpacing="12" Padding="16">
+
+        <!-- Touch surface -->
+        <Border Grid.Row="0" x:Name="Surface"
+                BackgroundColor="{StaticResource RkSurface}"
+                Stroke="{StaticResource RkStroke}"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 18">
+            <Grid>
+                <VerticalStackLayout x:Name="HintPanel" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+                    <Label Text="Drag to move · tap to click"
+                           TextColor="{StaticResource RkMuted}" HorizontalOptions="Center" />
+                    <Label Text="two fingers to scroll · two-finger tap = right click"
+                           TextColor="{StaticResource RkMuted}" FontSize="12" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Bottom bar -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" RowSpacing="10">
+            <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="Left" Command="{Binding LeftClickCommand}" Style="{StaticResource RkGhostButton}" />
+                <Button Grid.Column="1" Text="Middle" Command="{Binding MiddleClickCommand}" Style="{StaticResource RkGhostButton}" />
+                <Button Grid.Column="2" Text="Right" Command="{Binding RightClickCommand}" Style="{StaticResource RkGhostButton}" />
+            </Grid>
+            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                <Label Grid.Column="0" Text="Speed" VerticalOptions="Center" TextColor="{StaticResource RkMuted}" />
+                <Slider Grid.Column="1" Minimum="0.5" Maximum="3.0" Value="{Binding Sensitivity}"
+                        MinimumTrackColor="{StaticResource RkAccent}"
+                        ThumbColor="{StaticResource RkAccent}" />
+                <Label Grid.Column="2" VerticalOptions="Center" TextColor="{StaticResource RkText}"
+                       Text="{Binding Sensitivity, StringFormat='{0:0.0}x'}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentView>

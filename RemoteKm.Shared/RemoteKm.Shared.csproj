@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RemoteKm.Shared</RootNamespace>
+    <AssemblyName>RemoteKm.Shared</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- System.Text.Json 7+ is required for [JsonPolymorphic]/[JsonDerivedType]. -->
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
