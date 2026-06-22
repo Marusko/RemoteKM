@@ -169,10 +169,24 @@ top number row and the punctuation keys.
 ## Licenses & credits
 
 - **Icons by Axialis** — https://www.axialis.com
-- Built with open-source components, each under its own license:
-  CommunityToolkit.Maui / .Mvvm (MIT), FluentIcons.Maui (MIT), Camera.MAUI & Camera.MAUI.ZXing
-  (MIT), ZXing.Net (Apache-2.0), QRCoder (MIT), and Microsoft.Maui /
-  Microsoft.Extensions.DependencyInjection / System.Text.Json (MIT).
 
-Both apps show this list in-app: the PC app under **Settings → About & licenses**, and the
+Third-party NuGet packages and their licenses:
+
+| Package | License |
+|---|---|
+| Microsoft.Maui.* | MIT |
+| Microsoft.Extensions.DependencyInjection | MIT |
+| Microsoft.Extensions.Logging.Debug | MIT |
+| System.Text.Json | MIT |
+| CommunityToolkit.Maui | MIT |
+| CommunityToolkit.Mvvm | MIT |
+| FluentIcons.Maui / FluentIcons.Common | MIT |
+| Fluent UI System Icons | MIT |
+| Camera.MAUI | MIT |
+| Camera.MAUI.ZXing | MIT |
+| ZXing.Net (via Camera.MAUI.ZXing) | Apache-2.0 |
+| QRCoder | MIT |
+
+The full license conditions (the MIT permission notice with copyrights, and the Apache-2.0
+notice) are shown **inside the apps**: the PC app under **Settings → About & licenses**, and the
 phone app under **Status → Licenses**.
