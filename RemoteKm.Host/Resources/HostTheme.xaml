@@ -130,9 +130,11 @@
                                 Background="{StaticResource RkBgBrush}"
                                 BorderBrush="{StaticResource RkStrokeBrush}" BorderThickness="1"
                                 VerticalAlignment="Center">
-                            <TextBlock x:Name="Check" Text="✓" Foreground="White" FontSize="13"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       Visibility="Collapsed" />
+                            <Path x:Name="Check" Width="11" Height="11" Stretch="Uniform"
+                              Data="M 0,5 L 4,9 L 11,1" Stroke="White" StrokeThickness="2"
+                              StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                              StrokeLineJoin="Round" Visibility="Collapsed"
+                              HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ContentPresenter Margin="10,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
