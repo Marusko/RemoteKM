@@ -40,7 +40,36 @@ public partial class TrackpadView : ContentView
             HorizontalOptions = LayoutOptions.Center,
         });
 
+        WireMouseButton(MouseLeft, Symbol.PanelLeft, () => _viewModel.LeftClickCommand.Execute(null));
+        WireMouseButton(MouseMiddle, Symbol.TextBoxAlignMiddleRotate90, () => _viewModel.MiddleClickCommand.Execute(null));
+        WireMouseButton(MouseRight, Symbol.PanelRight, () => _viewModel.RightClickCommand.Execute(null));
+
         Surface.HandlerChanged += OnSurfaceHandlerChanged;
+    }
+
+    private void WireMouseButton(Border button, Symbol icon, Action onTap)
+    {
+        var accent = (Color)Application.Current!.Resources["RkSurfaceAlt"];
+        var pressed = (Color)Application.Current!.Resources["RkAccent"];
+
+        button.Content = new SymbolIcon
+        {
+            Symbol = icon,
+            FontSize = 26,
+            ForegroundColor = (Color)Application.Current!.Resources["RkText"],
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center,
+        };
+
+        var pointer = new PointerGestureRecognizer();
+        pointer.PointerPressed += (_, _) => button.BackgroundColor = pressed;
+        pointer.PointerReleased += (_, _) => button.BackgroundColor = accent;
+        pointer.PointerExited += (_, _) => button.BackgroundColor = accent;
+        button.GestureRecognizers.Add(pointer);
+
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += (_, _) => onTap();
+        button.GestureRecognizers.Add(tap);
     }
 
     private void OnSurfaceHandlerChanged(object? sender, EventArgs e)

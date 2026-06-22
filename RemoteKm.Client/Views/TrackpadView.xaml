@@ -7,37 +7,44 @@
 
     <Grid RowDefinitions="*,Auto" RowSpacing="12" Padding="16">
 
-        <!-- Touch surface -->
-        <Border Grid.Row="0" x:Name="Surface"
-                BackgroundColor="{StaticResource RkSurface}"
-                Stroke="{StaticResource RkStroke}"
-                StrokeThickness="1"
-                StrokeShape="RoundRectangle 18">
-            <Grid>
-                <VerticalStackLayout x:Name="HintPanel" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
-                    <Label Text="Drag to move · tap to click"
-                           TextColor="{StaticResource RkMuted}" HorizontalOptions="Center" />
-                    <Label Text="two fingers to scroll · two-finger tap = right click"
-                           TextColor="{StaticResource RkMuted}" FontSize="12" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-            </Grid>
-        </Border>
+        <!-- Surface (left) + mouse buttons (right column) -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
 
-        <!-- Bottom bar -->
-        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" RowSpacing="10">
-            <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                <Button Grid.Column="0" Text="Left" Command="{Binding LeftClickCommand}" Style="{StaticResource RkGhostButton}" />
-                <Button Grid.Column="1" Text="Middle" Command="{Binding MiddleClickCommand}" Style="{StaticResource RkGhostButton}" />
-                <Button Grid.Column="2" Text="Right" Command="{Binding RightClickCommand}" Style="{StaticResource RkGhostButton}" />
+            <!-- Touch surface -->
+            <Border Grid.Column="0" x:Name="Surface"
+                    BackgroundColor="{StaticResource RkSurface}"
+                    Stroke="{StaticResource RkStroke}"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18">
+                <Grid>
+                    <VerticalStackLayout x:Name="HintPanel" HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+                        <Label Text="Drag to move · tap to click"
+                               TextColor="{StaticResource RkMuted}" HorizontalOptions="Center" />
+                        <Label Text="two fingers to scroll · two-finger tap = right click"
+                               TextColor="{StaticResource RkMuted}" FontSize="12" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Mouse buttons (icons set in code-behind), stacked vertically on the right -->
+            <Grid Grid.Column="1" RowDefinitions="*,*,*" RowSpacing="12" WidthRequest="80">
+                <Border Grid.Row="0" x:Name="MouseLeft" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" />
+                <Border Grid.Row="1" x:Name="MouseMiddle" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" />
+                <Border Grid.Row="2" x:Name="MouseRight" BackgroundColor="{StaticResource RkSurfaceAlt}"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 14" />
             </Grid>
-            <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                <Label Grid.Column="0" Text="Speed" VerticalOptions="Center" TextColor="{StaticResource RkMuted}" />
-                <Slider Grid.Column="1" Minimum="0.5" Maximum="3.0" Value="{Binding Sensitivity}"
-                        MinimumTrackColor="{StaticResource RkAccent}"
-                        ThumbColor="{StaticResource RkAccent}" />
-                <Label Grid.Column="2" VerticalOptions="Center" TextColor="{StaticResource RkText}"
-                       Text="{Binding Sensitivity, StringFormat='{0:0.0}x'}" />
-            </Grid>
+        </Grid>
+
+        <!-- Speed slider (full width) -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+            <Label Grid.Column="0" Text="Speed" VerticalOptions="Center" TextColor="{StaticResource RkMuted}" />
+            <Slider Grid.Column="1" Minimum="0.5" Maximum="3.0" Value="{Binding Sensitivity}"
+                    MinimumTrackColor="{StaticResource RkAccent}"
+                    ThumbColor="{StaticResource RkAccent}" />
+            <Label Grid.Column="2" VerticalOptions="Center" TextColor="{StaticResource RkText}"
+                   Text="{Binding Sensitivity, StringFormat='{0:0.0}x'}" />
         </Grid>
     </Grid>
 </ContentView>
