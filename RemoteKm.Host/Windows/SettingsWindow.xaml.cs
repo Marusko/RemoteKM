@@ -16,6 +16,7 @@ public partial class SettingsWindow : Window
     private readonly WebSocketServer _server;
     private readonly Func<Task> _restartServices;
     private readonly Action _removeAllData;
+    private bool _loading;
 
     public SettingsWindow(SettingsService settings, WebSocketServer server, Func<Task> restartServices, Action removeAllData)
     {
@@ -26,15 +27,31 @@ public partial class SettingsWindow : Window
         _restartServices = restartServices;
         _removeAllData = removeAllData;
 
+        _loading = true;
         var current = settings.Current;
         PortBox.Text = current.ControlPort.ToString(CultureInfo.InvariantCulture);
         RequireConfirmCheck.IsChecked = current.RequireConfirmation;
         ReverseScrollCheck.IsChecked = current.ReverseScroll;
-        // Reflect the true registry state, not just the stored setting.
+        // Reflect the true OS state (registry / scheduled task), not just the stored setting.
         AutoStartCheck.IsChecked = AutoStartManager.IsEnabled();
+        AdminStartupCheck.IsChecked = ElevatedStartupManager.IsEnabled();
+        _loading = false;
 
         var ip = NetworkInfo.GetLocalIPv4();
         ListeningText.Text = $"Listening on {ip}:{_server.Port}";
+    }
+
+    // The two startup mechanisms are mutually exclusive (both would launch at logon).
+    private void OnAutoStartChanged(object sender, RoutedEventArgs e)
+    {
+        if (!_loading && AutoStartCheck.IsChecked == true)
+            AdminStartupCheck.IsChecked = false;
+    }
+
+    private void OnAdminStartupChanged(object sender, RoutedEventArgs e)
+    {
+        if (!_loading && AdminStartupCheck.IsChecked == true)
+            AutoStartCheck.IsChecked = false;
     }
 
     private bool TryValidatePort(out int port)
@@ -57,6 +74,7 @@ public partial class SettingsWindow : Window
             return;
 
         bool autoStart = AutoStartCheck.IsChecked == true;
+        bool adminStartup = AdminStartupCheck.IsChecked == true;
         bool requireConfirm = RequireConfirmCheck.IsChecked == true;
         bool reverseScroll = ReverseScrollCheck.IsChecked == true;
 
@@ -74,15 +92,7 @@ public partial class SettingsWindow : Window
         // Apply scroll direction immediately.
         InputInjector.ReverseScroll = reverseScroll;
 
-        try
-        {
-            AutoStartManager.Set(autoStart);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(this, $"Could not update auto-start: {ex.Message}",
-                "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
-        }
+        ApplyStartupOptions(autoStart, adminStartup);
 
         if (port != oldPort)
         {
@@ -98,6 +108,47 @@ public partial class SettingsWindow : Window
         }
 
         DialogResult = true;
+    }
+
+    /// <summary>
+    /// Reconciles the two startup mechanisms, changing the elevated scheduled task only when
+    /// needed (so an unrelated Save doesn't trigger a UAC prompt).
+    /// </summary>
+    private void ApplyStartupOptions(bool autoStart, bool adminStartup)
+    {
+        bool taskExists = ElevatedStartupManager.IsEnabled();
+
+        if (adminStartup)
+        {
+            try { AutoStartManager.Disable(); } catch { /* ignored */ }
+            if (!taskExists && !ElevatedStartupManager.Enable())
+            {
+                AdminStartupCheck.IsChecked = false;
+                MessageBox.Show(this,
+                    "Could not enable elevated startup. Administrator approval is required.",
+                    "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            return;
+        }
+
+        if (taskExists && !ElevatedStartupManager.Disable())
+        {
+            AdminStartupCheck.IsChecked = true;
+            MessageBox.Show(this,
+                "Could not remove the elevated startup task. Administrator approval is required.",
+                "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        try
+        {
+            AutoStartManager.Set(autoStart);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, $"Could not update auto-start: {ex.Message}",
+                "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     private void OnCancel(object sender, RoutedEventArgs e) => DialogResult = false;

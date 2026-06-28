@@ -12,7 +12,7 @@ public static class AutoStartManager
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private const string ValueName = "RemoteKM";
 
-    private static string ExecutablePath
+    internal static string ExecutablePath
     {
         get
         {

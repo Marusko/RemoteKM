@@ -11,6 +11,8 @@ public static class AppDataCleaner
     public static void RemoveAll()
     {
         try { AutoStartManager.Disable(); } catch { /* ignored */ }
+        // Remove the elevated-startup scheduled task too (prompts for admin only if it exists).
+        try { if (ElevatedStartupManager.IsEnabled()) ElevatedStartupManager.Disable(); } catch { /* ignored */ }
 
         var dir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
