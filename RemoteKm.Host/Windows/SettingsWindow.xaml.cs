@@ -102,8 +102,8 @@ public partial class SettingsWindow : Window
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"Could not restart services on the new port: {ex.Message}",
-                    "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialog.Show(this, "Restart failed",
+                    $"Could not restart services on the new port: {ex.Message}", MessageSeverity.Warning);
             }
         }
 
@@ -124,9 +124,9 @@ public partial class SettingsWindow : Window
             if (!taskExists && !ElevatedStartupManager.Enable())
             {
                 AdminStartupCheck.IsChecked = false;
-                MessageBox.Show(this,
+                MessageDialog.Show(this, "Elevated startup",
                     "Could not enable elevated startup. Administrator approval is required.",
-                    "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageSeverity.Warning);
             }
             return;
         }
@@ -134,9 +134,9 @@ public partial class SettingsWindow : Window
         if (taskExists && !ElevatedStartupManager.Disable())
         {
             AdminStartupCheck.IsChecked = true;
-            MessageBox.Show(this,
+            MessageDialog.Show(this, "Elevated startup",
                 "Could not remove the elevated startup task. Administrator approval is required.",
-                "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageSeverity.Warning);
             return;
         }
 
@@ -146,8 +146,8 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, $"Could not update auto-start: {ex.Message}",
-                "RemoteKM", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageDialog.Show(this, "Auto-start",
+                $"Could not update auto-start: {ex.Message}", MessageSeverity.Warning);
         }
     }
 
@@ -175,8 +175,9 @@ public partial class SettingsWindow : Window
     {
         bool confirmed = ConfirmDialog.Ask(this,
             "Remove all data",
-            "This deletes all RemoteKM settings, trusted devices, and logs, removes the auto-start " +
-            "registry entry, and exits the app. This cannot be undone.\n\nContinue?",
+            "This deletes all RemoteKM settings, trusted devices, and logs, and turns off auto-start " +
+            "(both the registry entry and the elevated-startup task), then exits the app. " +
+            "This cannot be undone.\n\nContinue?",
             confirmText: "Remove & exit");
 
         if (!confirmed)
