@@ -60,3 +60,4 @@ Desktop.ini
 
 # ---- Rider ----
 *.sln.iml
+/RemoteKm.Client/Resources/Raw/adi-registration.properties
