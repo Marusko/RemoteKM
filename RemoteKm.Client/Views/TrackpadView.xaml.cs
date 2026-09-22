@@ -8,15 +8,22 @@ namespace RemoteKm.Client.Views;
 /// Trackpad surface. On Android the gestures are driven directly from the native touch
 /// stream (MotionEvent) for reliable multi-touch: one-finger drag moves the cursor, a quick
 /// one-finger tap left-clicks, press-and-hold then drag holds the left button (drag/select),
-/// a two-finger tap right-clicks, and a two-finger drag scrolls.
+/// a two-finger tap right-clicks, a three-finger tap middle-clicks, and a two-finger drag scrolls.
 /// </summary>
 public partial class TrackpadView : ContentView
 {
     private readonly TrackpadViewModel _viewModel;
 
-    private static readonly TimeSpan TapMaxDuration = TimeSpan.FromMilliseconds(300);
-    private const double MoveThresholdDip = 8;
+    /// <summary>A press held longer than this is never a tap.</summary>
+    private static readonly TimeSpan TapMaxDuration = TimeSpan.FromMilliseconds(500);
+
+    /// <summary>Finger wobble tolerated inside a tap, in device-independent pixels.</summary>
+    private const double TapSlopDip = 10;
+
     private const double LongPressMs = 450;
+
+    /// <summary>Two-finger travel that makes up one wheel notch.</summary>
+    private const double ScrollDipPerNotch = 28.0;
 
     private float _density = 1f;
     private int _pointerCount;
@@ -24,8 +31,18 @@ public partial class TrackpadView : ContentView
     private bool _moved;
     private bool _dragging;
     private DateTime _start;
-    private float _lastX, _lastY, _lastScrollY;
-    private CancellationTokenSource? _longPressCts;
+    private int _longPressGeneration;
+
+    // Cursor finger, tracked by pointer id so lifting another finger never makes the cursor jump.
+    private int _activePointerId = -1;
+    private float _lastX, _lastY;
+
+    /// <summary>How far the gesture has wandered from where it started, in dip.</summary>
+    private double _travelX, _travelY;
+
+    // Two-finger scroll: the midpoint of the fingers that are down, plus the sub-notch remainder.
+    private float _lastScrollX, _lastScrollY;
+    private double _scrollRemainderDip;
 
     public TrackpadView(TrackpadViewModel viewModel)
     {
@@ -98,21 +115,14 @@ public partial class TrackpadView : ContentView
         switch (me.ActionMasked)
         {
             case Android.Views.MotionEventActions.Down:
-                _pointerCount = 1;
-                _maxPointers = 1;
-                _moved = false;
-                _dragging = false;
-                _start = DateTime.UtcNow;
-                _lastX = me.GetX(0);
-                _lastY = me.GetY(0);
-                ScheduleLongPress();
+                OnDown(me);
                 break;
 
             case Android.Views.MotionEventActions.PointerDown:
                 _pointerCount = me.PointerCount;
                 _maxPointers = Math.Max(_maxPointers, _pointerCount);
                 CancelLongPress();
-                _lastScrollY = AverageY(me);
+                AnchorScroll(me, ignoreIndex: -1);
                 break;
 
             case Android.Views.MotionEventActions.Move:
@@ -120,52 +130,117 @@ public partial class TrackpadView : ContentView
                 break;
 
             case Android.Views.MotionEventActions.PointerUp:
-                ResetPrimaryAfterLift(me);
-                _pointerCount = Math.Max(1, me.PointerCount - 1);
+                OnPointerUp(me);
                 break;
 
             case Android.Views.MotionEventActions.Up:
-            case Android.Views.MotionEventActions.Cancel:
                 OnUp();
-                _pointerCount = 0;
+                EndGesture();
+                break;
+
+            case Android.Views.MotionEventActions.Cancel:
+                OnCancel();
+                EndGesture();
                 break;
         }
 
         e.Handled = true;
     }
 
+    private void OnDown(Android.Views.MotionEvent me)
+    {
+        _pointerCount = 1;
+        _maxPointers = 1;
+        _moved = false;
+        _dragging = false;
+        _travelX = _travelY = 0;
+        _scrollRemainderDip = 0;
+        _start = DateTime.UtcNow;
+        _activePointerId = me.GetPointerId(0);
+        _lastX = me.GetX(0);
+        _lastY = me.GetY(0);
+        ScheduleLongPress();
+    }
+
     private void OnMove(Android.Views.MotionEvent me)
     {
         if (_pointerCount >= 2)
-        {
-            float y = AverageY(me);
-            float dy = y - _lastScrollY;
-            _lastScrollY = y;
-            double dyDip = dy / _density;
-            if (Math.Abs(dyDip) > 0.5)
-            {
-                _moved = true;
-                _ = _viewModel.ScrollAsync(-dyDip / 28.0);
-            }
-        }
+            MoveMultiFinger(me);
         else
-        {
-            float x = me.GetX(0), y = me.GetY(0);
-            double dx = (x - _lastX) / _density;
-            double dy = (y - _lastY) / _density;
-            _lastX = x;
-            _lastY = y;
+            MoveSingleFinger(me);
+    }
 
-            if (Math.Abs(dx) + Math.Abs(dy) > 0.01)
-            {
-                if (Math.Abs(dx) + Math.Abs(dy) > MoveThresholdDip)
-                {
-                    _moved = true;
-                    CancelLongPress();
-                }
-                _ = _viewModel.MoveAsync(dx, dy);
-            }
-        }
+    private void MoveMultiFinger(Android.Views.MotionEvent me)
+    {
+        var (x, y) = Centroid(me, ignoreIndex: -1);
+        double dxDip = (x - _lastScrollX) / _density;
+        double dyDip = (y - _lastScrollY) / _density;
+        _lastScrollX = x;
+        _lastScrollY = y;
+
+        // Travel on either axis rules out a multi-finger tap, so a sideways
+        // two-finger swipe no longer lands as a right click.
+        MarkTravel(dxDip, dyDip);
+
+        // Keep what is left of a notch instead of discarding it, so slow scrolling still moves.
+        _scrollRemainderDip += dyDip;
+        if (Math.Abs(_scrollRemainderDip) < 0.5)
+            return;
+
+        double scrolled = _scrollRemainderDip;
+        _scrollRemainderDip = 0;
+        _ = _viewModel.ScrollAsync(-scrolled / ScrollDipPerNotch);
+    }
+
+    private void MoveSingleFinger(Android.Views.MotionEvent me)
+    {
+        int index = ActivePointerIndex(me);
+        if (index < 0)
+            return;
+
+        float x = me.GetX(index), y = me.GetY(index);
+        double dx = (x - _lastX) / _density;
+        double dy = (y - _lastY) / _density;
+        _lastX = x;
+        _lastY = y;
+
+        MarkTravel(dx, dy);
+
+        if (Math.Abs(dx) + Math.Abs(dy) > 0.01)
+            _ = _viewModel.MoveAsync(dx, dy);
+    }
+
+    /// <summary>
+    /// Tracks how far the gesture has wandered from where it started. A gesture stays a tap only
+    /// while it keeps inside the slop; a single event's delta is a few tenths of a dip and far
+    /// too small to decide that on its own, which is why an ordinary drag used to be reported as
+    /// a click when it ended. The deltas are summed signed, so panel noise cancels out rather
+    /// than adding up and stealing a press-and-hold.
+    /// </summary>
+    private void MarkTravel(double dxDip, double dyDip)
+    {
+        if (_moved)
+            return;
+
+        _travelX += dxDip;
+        _travelY += dyDip;
+
+        if (Math.Sqrt(_travelX * _travelX + _travelY * _travelY) <= TapSlopDip)
+            return;
+
+        _moved = true;
+        CancelLongPress();
+    }
+
+    private void OnPointerUp(Android.Views.MotionEvent me)
+    {
+        int lifted = me.ActionIndex;
+        _pointerCount = Math.Max(1, me.PointerCount - 1);
+
+        // Re-anchor both gestures on the fingers that stay down; otherwise dropping from
+        // three fingers to two jolts the scroll, and two to one jumps the cursor.
+        AnchorScroll(me, lifted);
+        AnchorCursor(me, lifted);
     }
 
     private async void OnUp()
@@ -179,60 +254,112 @@ public partial class TrackpadView : ContentView
             return;
         }
 
-        if (!_moved && DateTime.UtcNow - _start < TapMaxDuration)
-        {
-            if (_maxPointers >= 2)
-                await _viewModel.RightClickCommand.ExecuteAsync(null);
-            else
-                await _viewModel.LeftClickCommand.ExecuteAsync(null);
-        }
+        if (_moved || DateTime.UtcNow - _start > TapMaxDuration)
+            return;
+
+        if (_maxPointers >= 3)
+            await _viewModel.MiddleClickCommand.ExecuteAsync(null);
+        else if (_maxPointers == 2)
+            await _viewModel.RightClickCommand.ExecuteAsync(null);
+        else
+            await _viewModel.LeftClickCommand.ExecuteAsync(null);
     }
 
-    private void ResetPrimaryAfterLift(Android.Views.MotionEvent me)
+    /// <summary>Android took the gesture away (a parent scroll, the window changing): release, never click.</summary>
+    private async void OnCancel()
     {
-        // Keep tracking a finger that stays down to avoid a cursor jump.
-        int lifted = me.ActionIndex;
-        int remaining = lifted == 0 ? 1 : 0;
-        if (remaining < me.PointerCount)
-        {
-            _lastX = me.GetX(remaining);
-            _lastY = me.GetY(remaining);
-        }
+        CancelLongPress();
+
+        if (!_dragging)
+            return;
+
+        _dragging = false;
+        await _viewModel.LeftUpAsync();
     }
 
-    private static float AverageY(Android.Views.MotionEvent me)
+    private void EndGesture()
     {
-        float sum = 0;
-        int n = me.PointerCount;
-        for (int i = 0; i < n; i++)
-            sum += me.GetY(i);
-        return n > 0 ? sum / n : 0;
+        _pointerCount = 0;
+        _activePointerId = -1;
+    }
+
+    private int ActivePointerIndex(Android.Views.MotionEvent me)
+    {
+        if (_activePointerId >= 0)
+        {
+            int index = me.FindPointerIndex(_activePointerId);
+            if (index >= 0)
+                return index;
+        }
+        return me.PointerCount > 0 ? 0 : -1;
+    }
+
+    /// <summary>Picks the cursor finger from those still down and rebases its origin.</summary>
+    private void AnchorCursor(Android.Views.MotionEvent me, int ignoreIndex)
+    {
+        int index = _activePointerId >= 0 ? me.FindPointerIndex(_activePointerId) : -1;
+        if (index < 0 || index == ignoreIndex)
+        {
+            index = FirstIndexExcept(me, ignoreIndex);
+            _activePointerId = index >= 0 ? me.GetPointerId(index) : -1;
+        }
+
+        if (index < 0)
+            return;
+
+        _lastX = me.GetX(index);
+        _lastY = me.GetY(index);
+    }
+
+    private void AnchorScroll(Android.Views.MotionEvent me, int ignoreIndex)
+    {
+        (_lastScrollX, _lastScrollY) = Centroid(me, ignoreIndex);
+        _scrollRemainderDip = 0;
+    }
+
+    private static (float X, float Y) Centroid(Android.Views.MotionEvent me, int ignoreIndex)
+    {
+        float sumX = 0, sumY = 0;
+        int n = 0;
+        for (int i = 0; i < me.PointerCount; i++)
+        {
+            if (i == ignoreIndex)
+                continue;
+            sumX += me.GetX(i);
+            sumY += me.GetY(i);
+            n++;
+        }
+        return n > 0 ? (sumX / n, sumY / n) : (0f, 0f);
+    }
+
+    private static int FirstIndexExcept(Android.Views.MotionEvent me, int ignoreIndex)
+    {
+        for (int i = 0; i < me.PointerCount; i++)
+        {
+            if (i != ignoreIndex)
+                return i;
+        }
+        return -1;
     }
 
     private void ScheduleLongPress()
     {
-        CancelLongPress();
-        var cts = new CancellationTokenSource();
-        _longPressCts = cts;
-        _ = Task.Delay((int)LongPressMs).ContinueWith(_ =>
-        {
-            if (cts.IsCancellationRequested)
-                return;
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                if (!cts.IsCancellationRequested && _pointerCount == 1 && !_moved && !_dragging)
-                {
-                    _dragging = true;
-                    await _viewModel.LeftDownAsync();
-                }
-            });
-        });
+        int generation = ++_longPressGeneration;
+        _ = Task.Delay((int)LongPressMs).ContinueWith(
+            _ => MainThread.BeginInvokeOnMainThread(() => BeginLongPressDrag(generation)),
+            TaskScheduler.Default);
     }
 
-    private void CancelLongPress()
+    private async void BeginLongPressDrag(int generation)
     {
-        _longPressCts?.Cancel();
-        _longPressCts = null;
+        if (generation != _longPressGeneration || _pointerCount != 1 || _moved || _dragging)
+            return;
+
+        _dragging = true;
+        await _viewModel.LeftDownAsync();
     }
+
+    /// <summary>Invalidates any pending long press so a stale timer can't start a drag.</summary>
+    private void CancelLongPress() => _longPressGeneration++;
 #endif
 }

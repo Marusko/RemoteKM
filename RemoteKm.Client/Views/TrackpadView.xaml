@@ -22,6 +22,8 @@
                                TextColor="{StaticResource RkMuted}" HorizontalOptions="Center" />
                         <Label Text="two fingers to scroll · two-finger tap = right click"
                                TextColor="{StaticResource RkMuted}" FontSize="12" HorizontalOptions="Center" />
+                        <Label Text="hold then drag to select · three-finger tap = middle click"
+                               TextColor="{StaticResource RkMuted}" FontSize="12" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>
