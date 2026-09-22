@@ -32,13 +32,6 @@ public static class InputInjector
     private const int WHEEL_DELTA = 120;
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct POINT
-    {
-        public int X;
-        public int Y;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
     private struct MOUSEINPUT
     {
         public int dx;
@@ -59,20 +52,13 @@ public static class InputInjector
         public IntPtr dwExtraInfo;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    private struct HARDWAREINPUT
-    {
-        public uint uMsg;
-        public ushort wParamL;
-        public ushort wParamH;
-    }
-
+    // The hardware-input arm of the Win32 union is not used; MOUSEINPUT is the largest
+    // member either way, so the struct keeps the layout SendInput expects.
     [StructLayout(LayoutKind.Explicit)]
     private struct InputUnion
     {
         [FieldOffset(0)] public MOUSEINPUT mi;
         [FieldOffset(0)] public KEYBDINPUT ki;
-        [FieldOffset(0)] public HARDWAREINPUT hi;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -91,6 +77,11 @@ public static class InputInjector
     private static readonly object _moveLock = new();
     private static double _accX;
     private static double _accY;
+
+    // Same carry for the wheel: a notch is 120 units, and a slow two-finger scroll sends
+    // far less than one unit per message.
+    private static readonly object _scrollLock = new();
+    private static double _accScroll;
 
     // Stuck-key watchdog: keys held down (via KeyAction.Down) with the time they went down.
     private static readonly ConcurrentDictionary<ushort, (DateTime Since, string Name)> _heldKeys = new();
@@ -171,7 +162,15 @@ public static class InputInjector
     {
         if (ReverseScroll)
             deltaY = -deltaY;
-        int amount = (int)(deltaY * WHEEL_DELTA);
+
+        int amount;
+        lock (_scrollLock)
+        {
+            _accScroll += deltaY * WHEEL_DELTA;
+            amount = (int)_accScroll;
+            _accScroll -= amount;
+        }
+
         if (amount == 0)
             return;
         SendMouse(0, 0, (uint)amount, MOUSEEVENTF_WHEEL);
