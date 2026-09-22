@@ -98,7 +98,16 @@ public sealed class DiscoveryService
             }
             catch (OperationCanceledException) { break; }
             catch (ObjectDisposedException) { break; }
-            catch (SocketException) { if (token.IsCancellationRequested) break; else continue; }
+            catch (SocketException)
+            {
+                if (token.IsCancellationRequested)
+                    break;
+                // Transient (typically an ICMP reply to an earlier broadcast), but pause so
+                // a persistent fault can't spin the loop.
+                try { await Task.Delay(50, token).ConfigureAwait(false); }
+                catch (OperationCanceledException) { break; }
+                continue;
+            }
 
             var text = Encoding.UTF8.GetString(result.Buffer);
             if (!text.StartsWith(Protocol.DiscoveryResponsePrefix, StringComparison.Ordinal))
@@ -111,7 +120,7 @@ public sealed class DiscoveryService
     }
 
     /// <summary>
-    /// Parses "REMOTEINPUT_HOST:{HostName}:{Port}". HostName may itself contain colons,
+    /// Parses "REMOTEKM_HOST:{HostName}:{Port}". HostName may itself contain colons,
     /// so we split off the trailing port and treat the middle as the name.
     /// </summary>
     private static DiscoveredHost? ParseResponse(string text, string sourceIp)
