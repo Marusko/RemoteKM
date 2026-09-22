@@ -24,9 +24,7 @@ public partial class MainShellPage : ContentPage
 
     private Border[] _navTiles = null!;
     private SymbolIcon[] _navIcons = null!;
-    private SymbolIcon _collapseIcon = null!;
     private int _selected = -1;
-    private bool _railCollapsed;
 
     public MainShellPage(
         TrackpadView trackpad,
@@ -59,7 +57,7 @@ public partial class MainShellPage : ContentPage
         _navIcons = new SymbolIcon[3];
 
         // Collapse toggle at the top of the rail.
-        _collapseIcon = new SymbolIcon
+        NavCollapse.Content = new SymbolIcon
         {
             Symbol = Symbol.ChevronLeft,
             FontSize = 22,
@@ -67,7 +65,6 @@ public partial class MainShellPage : ContentPage
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center,
         };
-        NavCollapse.Content = _collapseIcon;
         var collapseTap = new TapGestureRecognizer();
         collapseTap.Tapped += (_, _) => SetRailCollapsed(true);
         NavCollapse.GestureRecognizers.Add(collapseTap);
@@ -123,8 +120,14 @@ public partial class MainShellPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _messenger.Unregister<DisconnectedMessage>(this);
         _messenger.Register<MainShellPage, DisconnectedMessage>(this, static (page, msg) => page.OnDisconnected(msg.Value));
-        Select(0);
+
+        // OnDisappearing tears the active view down, so re-select whatever was showing
+        // instead of snapping back to the trackpad when a pushed page (About) is popped.
+        int restore = _selected < 0 ? 0 : _selected;
+        _selected = -1;
+        Select(restore);
     }
 
     protected override void OnDisappearing()
@@ -176,7 +179,6 @@ public partial class MainShellPage : ContentPage
 
     private void SetRailCollapsed(bool collapsed)
     {
-        _railCollapsed = collapsed;
         // Collapsed: hide the whole rail (full width + height for the content) and show a
         // small floating expand button instead.
         RailColumn.Width = collapsed ? new GridLength(0) : new GridLength(84);
