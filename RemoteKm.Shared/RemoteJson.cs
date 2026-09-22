@@ -35,8 +35,6 @@ public partial class RemoteJsonContext : JsonSerializerContext
 /// </summary>
 public static class RemoteJson
 {
-    public static JsonSerializerOptions Options => RemoteJsonContext.Default.Options;
-
     public static string Serialize<T>(T value)
         => JsonSerializer.Serialize(value, typeof(T), RemoteJsonContext.Default);
 

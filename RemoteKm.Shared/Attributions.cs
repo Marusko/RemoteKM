@@ -7,8 +7,6 @@ namespace RemoteKm.Shared;
 /// </summary>
 public static class Attributions
 {
-    public const string IconsCredit = "Icons by Axialis — https://www.axialis.com";
-
     public const string Text =
         """
         RemoteKM - v1.0.0 - MS

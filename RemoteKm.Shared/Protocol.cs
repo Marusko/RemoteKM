@@ -13,9 +13,6 @@ public static class Protocol
     /// </summary>
     public static readonly int[] DiscoveryPorts = { 45454, 47474, 49464 };
 
-    /// <summary>Primary UDP discovery port (first candidate).</summary>
-    public static readonly int DiscoveryPort = DiscoveryPorts[0];
-
     /// <summary>
     /// Candidate TCP/WebSocket control ports. The host binds the first available one and
     /// advertises the actual port via the discovery reply / QR code.
