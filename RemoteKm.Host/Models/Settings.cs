@@ -21,12 +21,4 @@ public class Settings
     /// reconciled on the Settings window; this is a convenience mirror only.
     /// </summary>
     public bool AutoStart { get; set; } = false;
-
-    public Settings Clone() => new()
-    {
-        ControlPort = ControlPort,
-        RequireConfirmation = RequireConfirmation,
-        ReverseScroll = ReverseScroll,
-        AutoStart = AutoStart,
-    };
 }

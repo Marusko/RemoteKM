@@ -29,8 +29,6 @@ public static class KeyboardLayoutInfo
         return (ToFamily(culture), culture?.TwoLetterISOLanguageName ?? "en");
     }
 
-    public static KeyboardLayout Detect() => ToFamily(GetActiveCulture());
-
     private static KeyboardLayout ToFamily(CultureInfo? culture)
     {
         if (culture is null)
