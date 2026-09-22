@@ -32,41 +32,6 @@
         <Setter Property="FontSize" Value="15" />
     </Style>
 
-    <!-- On-screen keyboard key -->
-    <Style x:Key="RkKey" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource RkKeyBg}" />
-        <Setter Property="TextColor" Value="{StaticResource RkText}" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="Margin" Value="2" />
-        <Setter Property="MinimumWidthRequest" Value="0" />
-        <Setter Property="HeightRequest" Value="46" />
-    </Style>
-
-    <!-- Modifier key (Ctrl/Alt/Shift/Win) -->
-    <Style x:Key="RkModKey" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="{StaticResource RkSurfaceAlt}" />
-        <Setter Property="TextColor" Value="{StaticResource RkMuted}" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="FontAttributes" Value="Bold" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="Margin" Value="2" />
-        <Setter Property="HeightRequest" Value="46" />
-    </Style>
-
-    <!-- Left navigation rail button -->
-    <Style x:Key="RkNavButton" TargetType="Button">
-        <Setter Property="BackgroundColor" Value="Transparent" />
-        <Setter Property="TextColor" Value="{StaticResource RkMuted}" />
-        <Setter Property="FontSize" Value="22" />
-        <Setter Property="CornerRadius" Value="14" />
-        <Setter Property="HeightRequest" Value="56" />
-        <Setter Property="WidthRequest" Value="56" />
-        <Setter Property="Padding" Value="0" />
-    </Style>
-
     <!-- Left navigation rail tile (icon set in code-behind) -->
     <Style x:Key="RkNavTile" TargetType="Border">
         <Setter Property="BackgroundColor" Value="Transparent" />

@@ -115,9 +115,6 @@ public partial class TrackpadViewModel : ObservableObject
     [RelayCommand]
     private Task MiddleClick() => _connection.SendCommandAsync(new MouseClick(MouseButton.Middle, ClickType.Single));
 
-    public Task DoubleClickAsync()
-        => _connection.SendCommandAsync(new MouseClick(MouseButton.Left, ClickType.Double));
-
     /// <summary>Holds the left button down (begin a drag).</summary>
     public Task LeftDownAsync()
         => _connection.SendCommandAsync(new MouseButtonHold(MouseButton.Left, true));

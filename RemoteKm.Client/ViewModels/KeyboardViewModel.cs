@@ -31,10 +31,6 @@ public partial class KeyboardViewModel : ObservableObject
         remove => _connection.LayoutChanged -= value;
     }
 
-    /// <summary>Types literal text (Unicode — what the key shows is exactly what is typed).</summary>
-    public Task TypeAsync(string text)
-        => string.IsNullOrEmpty(text) ? Task.CompletedTask : _connection.SendCommandAsync(new TextInput(text));
-
     /// <summary>Presses a key down and holds it (released later with <see cref="KeyUpAsync"/>).</summary>
     public Task KeyDownAsync(string vk) => _connection.SendCommandAsync(new KeyPress(vk, KeyAction.Down));
 

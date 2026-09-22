@@ -27,10 +27,7 @@ public enum ConnectResultKind
     Error
 }
 
-public readonly record struct ConnectResult(ConnectResultKind Kind, string? Message = null)
-{
-    public bool IsSuccess => Kind == ConnectResultKind.Accepted;
-}
+public readonly record struct ConnectResult(ConnectResultKind Kind, string? Message = null);
 
 /// <summary>
 /// Owns the client's <see cref="ClientWebSocket"/> connection: pairing handshake,

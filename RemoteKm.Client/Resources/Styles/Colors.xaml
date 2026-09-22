@@ -10,7 +10,6 @@
     <Color x:Key="PrimaryDarkText">#EDEBFF</Color>
     <Color x:Key="Secondary">#00D2A8</Color>
     <Color x:Key="SecondaryDarkText">#0B3B33</Color>
-    <Color x:Key="Tertiary">#2D2B55</Color>
 
     <!-- RemoteKm theme palette -->
     <Color x:Key="RkBg">#0F1020</Color>
@@ -26,12 +25,6 @@
     <Color x:Key="RkKeyBg">#262842</Color>
     <Color x:Key="RkKeyActive">#6C5CE7</Color>
 
-    <SolidColorBrush x:Key="RkBgBrush" Color="{StaticResource RkBg}" />
-    <SolidColorBrush x:Key="RkSurfaceBrush" Color="{StaticResource RkSurface}" />
-    <SolidColorBrush x:Key="RkSurfaceAltBrush" Color="{StaticResource RkSurfaceAlt}" />
-    <SolidColorBrush x:Key="RkAccentBrush" Color="{StaticResource RkAccent}" />
-    <SolidColorBrush x:Key="RkDangerBrush" Color="{StaticResource RkDanger}" />
-
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Magenta">#D600AA</Color>
@@ -46,19 +39,4 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
-
-    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
-    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
-    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
-    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
-    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
-
-    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
-    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
-    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
-    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
-    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
-    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
-    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
-    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
 </ResourceDictionary>
