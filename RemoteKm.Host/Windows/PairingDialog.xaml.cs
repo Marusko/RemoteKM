@@ -36,6 +36,10 @@ public partial class PairingDialog : Window
             Topmost = true;
             AcceptButton.Focus();
         };
+
+        // Closing from the title bar leaves the countdown running, and its next tick would
+        // set DialogResult on a window that is already gone.
+        Closed += (_, _) => _timer.Stop();
     }
 
     private void OnTick(object? sender, EventArgs e)

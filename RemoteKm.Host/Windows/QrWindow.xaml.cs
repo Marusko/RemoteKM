@@ -9,20 +9,20 @@ using RemoteKm.Shared;
 namespace RemoteKm.Host.Windows;
 
 /// <summary>
-/// Shows a QR code encoding "remoteInput://ip:port" plus the raw URI text.
-/// Auto-refreshes every 10 seconds in case the local IP changes.
+/// Shows a QR code encoding "remotekm://ip:port" plus the raw URI text.
+/// Auto-refreshes every 10 seconds in case the local IP or the bound port changes.
 /// </summary>
 public partial class QrWindow : Window
 {
-    private readonly SettingsService _settings;
+    private readonly WebSocketServer _server;
     private readonly DispatcherTimer _timer;
     private string _lastUri = string.Empty;
 
-    public QrWindow(SettingsService settings)
+    public QrWindow(WebSocketServer server)
     {
         InitializeComponent();
         WindowTheme.UseDarkTitleBar(this);
-        _settings = settings;
+        _server = server;
 
         Refresh();
 
@@ -36,8 +36,9 @@ public partial class QrWindow : Window
     private void Refresh()
     {
         var ip = NetworkInfo.GetLocalIPv4();
-        var port = _settings.Current.ControlPort;
-        var uri = $"{Protocol.UriScheme}://{ip}:{port}";
+        // The port the server actually bound, which is not the configured one when a
+        // fallback candidate had to be used.
+        var uri = $"{Protocol.UriScheme}://{ip}:{_server.Port}";
 
         if (uri == _lastUri)
             return;

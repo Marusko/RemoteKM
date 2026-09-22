@@ -141,7 +141,7 @@ public partial class App : Application
             return;
         }
 
-        _qrWindow = new QrWindow(_settings);
+        _qrWindow = new QrWindow(_server);
         _qrWindow.Closed += (_, _) => _qrWindow = null;
         _qrWindow.Show();
     }
