@@ -40,8 +40,9 @@ public partial class KeyboardView : ContentView
 
     private readonly KeyboardViewModel _viewModel;
 
-    private bool _built;
     private bool _subscribed;
+    private KeyboardLayout? _builtLayout;
+    private string _builtLanguage = string.Empty;
     private bool _fn;
     private bool _caps;
     private bool _shiftHeld;
@@ -74,32 +75,56 @@ public partial class KeyboardView : ContentView
             _viewModel.LayoutChanged += OnLayoutChanged;
             _subscribed = true;
         }
-        if (_built)
-            return;
-        Build(_viewModel.Layout, _viewModel.Language);
-        _built = true;
+
+        // Also covers a host layout change that happened while another tab was showing.
+        if (_builtLayout != _viewModel.Layout || _builtLanguage != _viewModel.Language)
+            Rebuild();
     }
 
-    public void Deactivate() => _ = ReleaseAllAsync();
+    public void Deactivate()
+    {
+        // The connection outlives this view, so leaving the handler attached would keep
+        // every keyboard from every session alive and rebuilding.
+        if (_subscribed)
+        {
+            _viewModel.LayoutChanged -= OnLayoutChanged;
+            _subscribed = false;
+        }
+        _ = ReleaseAllAsync();
+    }
 
     private void OnLayoutChanged()
     {
         // Host switched input language (Alt+Shift) — rebuild the keyboard live.
-        MainThread.BeginInvokeOnMainThread(() =>
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
-            _pressed.Clear();
-            foreach (var t in _repeat.Values) t.Stop();
-            _repeat.Clear();
-            _modKeys.Clear();
-            _capsKeys.Clear();
-            _fnKeys.Clear();
-            _fnRelabel.Clear();
-            _charKeys.Clear();
-            _fn = false;
-            _shiftHeld = false;
-            Build(_viewModel.Layout, _viewModel.Language);
-            UpdateEmphasis();
+            // Release first: the keys holding those modifiers down are about to be discarded.
+            await ReleaseAllAsync();
+            Rebuild();
         });
+    }
+
+    private void Rebuild()
+    {
+        foreach (var t in _repeat.Values) t.Stop();
+        _repeat.Clear();
+        _pressed.Clear();
+        _modKeys.Clear();
+        _capsKeys.Clear();
+        _fnKeys.Clear();
+        _fnRelabel.Clear();
+        _charKeys.Clear();
+        _fn = false;
+        _shiftHeld = false;
+
+        Build(_viewModel.Layout, _viewModel.Language);
+        _builtLayout = _viewModel.Layout;
+        _builtLanguage = _viewModel.Language;
+
+        // Caps is a real OS toggle that survives the rebuild, so restore its lit state.
+        foreach (var def in _capsKeys)
+            SetHighlight(def, false);
+        UpdateEmphasis();
     }
 
     private static Color Res(string key) => (Color)Application.Current!.Resources[key];
