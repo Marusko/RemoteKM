@@ -38,7 +38,13 @@ public readonly record struct ConnectResult(ConnectResultKind Kind, string? Mess
 /// </summary>
 public sealed class ConnectionService : INotifyPropertyChanged
 {
-    private static readonly TimeSpan PairingTimeout = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan ConnectTimeout = TimeSpan.FromSeconds(10);
+
+    /// <summary>
+    /// How long to wait for the host's pairing verdict. It must outlast the host's own
+    /// confirmation dialog (30s) or the user can accept into a client that already gave up.
+    /// </summary>
+    private static readonly TimeSpan ApprovalTimeout = TimeSpan.FromSeconds(35);
     private static readonly TimeSpan PingInterval = TimeSpan.FromSeconds(2);
     private static readonly TimeSpan KeepAliveTimeout = TimeSpan.FromSeconds(5);
 
@@ -142,7 +148,7 @@ public sealed class ConnectionService : INotifyPropertyChanged
         try
         {
             var uri = new Uri($"ws://{ip}:{port}/");
-            using (var connectCts = new CancellationTokenSource(PairingTimeout))
+            using (var connectCts = new CancellationTokenSource(ConnectTimeout))
                 await _ws.ConnectAsync(uri, connectCts.Token).ConfigureAwait(false);
 
             // Send the pairing request.
@@ -153,7 +159,7 @@ public sealed class ConnectionService : INotifyPropertyChanged
 
             // Await the pairing response (bounded).
             var buffer = new byte[Protocol.MaxMessageSize];
-            using var pairingCts = new CancellationTokenSource(PairingTimeout);
+            using var pairingCts = new CancellationTokenSource(ApprovalTimeout);
             var (text, closed) = await ReceiveTextAsync(buffer, pairingCts.Token).ConfigureAwait(false);
             if (closed || text is null)
                 return Fail(ConnectResultKind.Error, "Connection closed during pairing.");
