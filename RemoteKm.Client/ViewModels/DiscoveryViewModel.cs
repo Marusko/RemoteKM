@@ -55,13 +55,16 @@ public partial class DiscoveryViewModel : ObservableObject
 
     public void OnAppearing()
     {
+        _discovery.HostDiscovered -= OnHostDiscovered;
         _discovery.HostDiscovered += OnHostDiscovered;
         _discovery.Start();
 
         // A QR scan completes on the ScanPage and reports the endpoint back here.
+        _messenger.Unregister<QrScannedMessage>(this);
         _messenger.Register<DiscoveryViewModel, QrScannedMessage>(this,
             static (vm, msg) => _ = vm.ConnectAsync(msg.Ip, msg.Port, msg.Ip));
 
+        StopUiTimer();
         _uiTimer = Application.Current!.Dispatcher.CreateTimer();
         _uiTimer.Interval = TimeSpan.FromSeconds(1);
         _uiTimer.Tick += OnUiTick;
@@ -70,16 +73,19 @@ public partial class DiscoveryViewModel : ObservableObject
 
     public async Task OnDisappearingAsync()
     {
-        if (_uiTimer is not null)
-        {
-            _uiTimer.Stop();
-            _uiTimer.Tick -= OnUiTick;
-            _uiTimer = null;
-        }
-
+        StopUiTimer();
         _messenger.Unregister<QrScannedMessage>(this);
         _discovery.HostDiscovered -= OnHostDiscovered;
         await _discovery.StopAsync();
+    }
+
+    private void StopUiTimer()
+    {
+        if (_uiTimer is null)
+            return;
+        _uiTimer.Stop();
+        _uiTimer.Tick -= OnUiTick;
+        _uiTimer = null;
     }
 
     private void OnHostDiscovered(DiscoveredHost host)
