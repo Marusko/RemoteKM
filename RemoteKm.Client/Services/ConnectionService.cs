@@ -50,6 +50,7 @@ public sealed class ConnectionService : INotifyPropertyChanged
     private Task? _receiveLoop;
     private Task? _pingLoop;
 
+    private readonly SemaphoreSlim _sendLock = new(1, 1);
     private readonly object _statsLock = new();
     private readonly Queue<double> _latencySamples = new();
     private long _lastPingTicks;
@@ -270,12 +271,26 @@ public sealed class ConnectionService : INotifyPropertyChanged
 
     private async Task SendJsonAsync<T>(T value, CancellationToken token)
     {
-        var ws = _ws;
-        if (ws is null) return;
+        if (_ws is null) return;
 
         var json = RemoteJson.Serialize(value);
         var bytes = Encoding.UTF8.GetBytes(json);
-        await ws.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, token).ConfigureAwait(false);
+
+        // A ClientWebSocket allows one send at a time. Trackpad motion, clicks and the
+        // keepalive ping all race here, and an overlapping send would throw and be
+        // swallowed as a dropped command, so take turns instead.
+        await _sendLock.WaitAsync(token).ConfigureAwait(false);
+        try
+        {
+            var ws = _ws;
+            if (ws is null) return;
+            await ws.SendAsync(new ArraySegment<byte>(bytes), WebSocketMessageType.Text, true, token).ConfigureAwait(false);
+        }
+        finally
+        {
+            _sendLock.Release();
+        }
+
         Interlocked.Add(ref _bytesSent, bytes.Length);
         OnPropertyChanged(nameof(BytesSent));
     }
