@@ -408,6 +408,7 @@ public sealed class WebSocketServer
     {
         using var ms = new MemoryStream();
         WebSocketReceiveResult result;
+        bool oversized = false;
         do
         {
             try
@@ -426,11 +427,11 @@ public sealed class WebSocketServer
             if (result.MessageType == WebSocketMessageType.Close)
                 return (null, true);
 
-            if (ms.Length + result.Count > Protocol.MaxMessageSize)
+            // Oversized message: keep draining its remaining frames, but discard the whole
+            // thing rather than handing back the part that happened to fit.
+            if (oversized || ms.Length + result.Count > Protocol.MaxMessageSize)
             {
-                // Oversized frame: drain and ignore.
-                if (result.EndOfMessage)
-                    return (null, false);
+                oversized = true;
                 continue;
             }
 
@@ -438,7 +439,7 @@ public sealed class WebSocketServer
         }
         while (!result.EndOfMessage);
 
-        return (Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Length), false);
+        return oversized ? (null, false) : (Encoding.UTF8.GetString(ms.GetBuffer(), 0, (int)ms.Length), false);
     }
 
     private static Task SendJsonAsync<T>(WebSocket socket, T value, CancellationToken token)
@@ -453,7 +454,15 @@ public sealed class WebSocketServer
     {
         try
         {
-            await SendJsonAsync(session.Socket, CommandEnvelope.Now(command), token).ConfigureAwait(false);
+            await session.SendGate.WaitAsync(token).ConfigureAwait(false);
+            try
+            {
+                await SendJsonAsync(session.Socket, CommandEnvelope.Now(command), token).ConfigureAwait(false);
+            }
+            finally
+            {
+                session.SendGate.Release();
+            }
         }
         catch
         {
