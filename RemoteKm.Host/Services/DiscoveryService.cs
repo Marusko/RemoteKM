@@ -28,9 +28,6 @@ public sealed class DiscoveryService
 
     public bool IsRunning => _loop is { IsCompleted: false };
 
-    /// <summary>The UDP port discovery actually bound to, or 0 if not running.</summary>
-    public int BoundPort { get; private set; }
-
     /// <summary>Raised with a human-readable message when discovery fails to start.</summary>
     public event Action<string>? StartupFailed;
 
@@ -50,7 +47,6 @@ public sealed class DiscoveryService
 
                 _udp = udp;
                 _cts = new CancellationTokenSource();
-                BoundPort = port;
                 _loop = Task.Run(() => ReceiveLoopAsync(udp, _cts.Token));
                 AppLog.Info($"Discovery listening on UDP {port}");
                 return;
@@ -62,7 +58,6 @@ public sealed class DiscoveryService
         }
 
         // Every candidate failed.
-        BoundPort = 0;
         StartupFailed?.Invoke(
             $"Discovery is off: none of the UDP ports [{string.Join(", ", Protocol.DiscoveryPorts)}] " +
             $"could be opened ({lastError?.SocketErrorCode}). Clients can still connect manually by IP.");
@@ -87,7 +82,6 @@ public sealed class DiscoveryService
         _cts.Dispose();
         _cts = null;
         _loop = null;
-        BoundPort = 0;
     }
 
     private async Task ReceiveLoopAsync(UdpClient udp, CancellationToken token)
@@ -119,6 +113,10 @@ public sealed class DiscoveryService
             {
                 if (token.IsCancellationRequested)
                     break;
+                // Usually an ICMP "port unreachable" from an earlier reply, which is
+                // transient — but pause so a persistent fault can't spin the loop.
+                try { await Task.Delay(50, token).ConfigureAwait(false); }
+                catch (OperationCanceledException) { break; }
             }
         }
     }
