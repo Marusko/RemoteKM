@@ -251,7 +251,10 @@ public sealed class WebSocketServer
         }
         finally
         {
-            _sessions.TryRemove(session.ClientId, out _);
+            // Only drop the dictionary entry if it is still *this* session: a client that
+            // reconnects registers a new one under the same id, and the old connection
+            // unwinding here must not evict it.
+            _sessions.TryRemove(new KeyValuePair<string, ActiveSession>(session.ClientId, session));
             await AbortAsync(socket).ConfigureAwait(false);
             SessionsChanged?.Invoke();
         }
