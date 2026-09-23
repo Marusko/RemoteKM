@@ -9,7 +9,7 @@ public static class Attributions
 {
     public const string Text =
         """
-        RemoteKM - v1.0.0 - MS
+        RemoteKM - v1.1.0 - MS
 
         Icons by Axialis — https://www.axialis.com
 

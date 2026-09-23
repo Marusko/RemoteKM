@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.remotekm.client" android:versionCode="100" android:versionName="1.0.0">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.remotekm.client">
 	<!-- usesCleartextTraffic allows the local ws:// control channel on the LAN. -->
 	<application android:allowBackup="true" android:supportsRtl="true" android:usesCleartextTraffic="true" android:label="RemoteKM" android:icon="@mipmap/icon" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

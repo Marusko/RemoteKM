@@ -9,6 +9,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>RemoteKm.Host</RootNamespace>
     <AssemblyName>RemoteKM Host</AssemblyName>
+    <Version>1.1.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <!-- DPI awareness is declared in app.manifest (for WPF); silence the WinForms hint. -->
     <NoWarn>$(NoWarn);WFO0003</NoWarn>
