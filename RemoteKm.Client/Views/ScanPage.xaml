@@ -4,8 +4,11 @@
              xmlns:camera="clr-namespace:Camera.MAUI;assembly=Camera.MAUI"
              x:Class="RemoteKm.Client.Views.ScanPage"
              Title="Scan QR"
+             NavigationPage.HasNavigationBar="False"
              BackgroundColor="{StaticResource RkBg}">
 
+    <!-- No navigation bar: its back arrow would pop the page without stopping the camera
+         first (see ScanPage.CloseAsync). Cancel and the system back gesture both do. -->
     <Grid>
         <camera:CameraView x:Name="Camera" HorizontalOptions="Fill" VerticalOptions="Fill" />
 

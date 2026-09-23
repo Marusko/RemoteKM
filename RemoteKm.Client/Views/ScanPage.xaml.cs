@@ -14,10 +14,17 @@ namespace RemoteKm.Client.Views;
 /// Camera QR scanner (Camera.MAUI + Camera.MAUI.ZXing). Parses a "remotekm://ip:port"
 /// payload and reports it back via the messenger so the discovery page can connect.
 /// </summary>
+/// <remarks>
+/// Every way off this page goes through <see cref="CloseAsync"/>, which stops the camera
+/// <b>before</b> popping. Popping first lets MAUI tear the camera view down under a running
+/// session with live decoder threads, and that crashes the process from a Java thread.
+/// </remarks>
 public partial class ScanPage : ContentPage
 {
     private readonly IMessenger _messenger;
-    private bool _scanned;
+    private Task<bool>? _starting;
+    private Task? _shutdown;
+    private bool _closing;
 
     public ScanPage(IMessenger messenger)
     {
@@ -27,8 +34,34 @@ public partial class ScanPage : ContentPage
 
     protected override async void OnAppearing()
     {
-        _scanned = false;
         base.OnAppearing();
+        if (_closing)
+            return;
+
+        _starting = StartCameraAsync();
+        if (!await _starting)
+            await CloseAsync(null);
+    }
+
+    protected override async void OnDisappearing()
+    {
+        // Backstop only: the normal exits have already stopped the camera by now.
+        await ShutDownCameraAsync();
+        base.OnDisappearing();
+    }
+
+    // The Android back gesture/button would otherwise pop the page with the camera running.
+    protected override bool OnBackButtonPressed()
+    {
+        _ = CloseAsync(null);
+        return true;
+    }
+
+    private async void OnCancel(object? sender, EventArgs e) => await CloseAsync(null);
+
+    /// <summary>Returns false when the scanner cannot run and the page should close.</summary>
+    private async Task<bool> StartCameraAsync()
+    {
         try
         {
             AppLog.Info("[Scan] Camera starting…");
@@ -37,9 +70,12 @@ public partial class ScanPage : ContentPage
             {
                 AppLog.Warn("[Scan] Camera permission denied");
                 await Toast.Make("Camera permission is required to scan QR codes.", ToastDuration.Long).Show();
-                await Navigation.PopAsync();
-                return;
+                return false;
             }
+
+            // Cancelled while the permission prompt was up: never start the camera at all.
+            if (_closing)
+                return true;
 
             InitCamera();
             await Task.Delay(50);
@@ -51,24 +87,21 @@ public partial class ScanPage : ContentPage
                 AppLog.Error($"[Scan] Camera failed to start: {res}");
             else
                 AppLog.Info("[Scan] Camera started");
+            return true;
         }
         catch (Exception ex)
         {
             AppLog.Error("[Scan] Error starting camera", ex);
             await Toast.Make("Could not start the camera.", ToastDuration.Long).Show();
-            await Navigation.PopAsync();
+            return false;
         }
-    }
-
-    protected override async void OnDisappearing()
-    {
-        try { await Camera.StopCameraAsync(); } catch { /* ignored */ }
-        base.OnDisappearing();
     }
 
     private void InitCamera()
     {
+        Camera.CamerasLoaded -= OnCamerasLoaded;
         Camera.CamerasLoaded += OnCamerasLoaded;
+        Camera.BarcodeDetected -= OnBarcodeDetected;
         Camera.BarcodeDetected += OnBarcodeDetected;
         Camera.BarCodeDecoder = new ZXingBarcodeDecoder();
         Camera.BarCodeOptions = new BarcodeDecodeOptions
@@ -89,26 +122,61 @@ public partial class ScanPage : ContentPage
             Camera.Camera = Camera.Cameras.First();
     }
 
-    private async void OnBarcodeDetected(object? sender, BarcodeEventArgs args)
+    // Raised on a decoder thread, possibly several times for one code.
+    private void OnBarcodeDetected(object? sender, BarcodeEventArgs args)
     {
-        if (_scanned)
-            return;
-
         var value = args.Result?.FirstOrDefault()?.Text;
         if (string.IsNullOrWhiteSpace(value) || !TryParseEndpoint(value!, out var ip, out var port))
             return;
 
-        _scanned = true;
-        AppLog.Info($"[Scan] QR endpoint {ip}:{port}");
-        await MainThread.InvokeOnMainThreadAsync(async () =>
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
-            try { await Camera.StopCameraAsync(); } catch { /* ignored */ }
-            await Navigation.PopAsync();
-            _messenger.Send(new QrScannedMessage(ip, port));
+            if (_closing)
+                return;
+            AppLog.Info($"[Scan] QR endpoint {ip}:{port}");
+            await CloseAsync(new QrScannedMessage(ip, port));
         });
     }
 
-    private void OnCancel(object? sender, EventArgs e) => Navigation.PopAsync();
+    /// <summary>The single way off this page: stop the camera, pop, then report any result.</summary>
+    private async Task CloseAsync(QrScannedMessage? result)
+    {
+        if (_closing)
+            return;
+        _closing = true;
+        AppLog.Info(result is null ? "[Scan] Closing (cancelled)" : "[Scan] Closing (code scanned)");
+
+        await ShutDownCameraAsync();
+        await Navigation.PopAsync();
+
+        if (result is not null)
+            _messenger.Send(result);
+    }
+
+    private Task ShutDownCameraAsync() => _shutdown ??= ShutDownCameraCoreAsync();
+
+    private async Task ShutDownCameraCoreAsync()
+    {
+        // A start still in flight would bring the camera up after we stopped it.
+        if (_starting is not null)
+        {
+            try { await _starting; } catch { /* already logged */ }
+        }
+
+        Camera.BarcodeDetected -= OnBarcodeDetected;
+        Camera.CamerasLoaded -= OnCamerasLoaded;
+        Camera.BarCodeDetectionEnabled = false;
+
+        try
+        {
+            await Camera.StopCameraAsync();
+            AppLog.Info("[Scan] Camera stopped");
+        }
+        catch (Exception ex)
+        {
+            AppLog.Warn($"[Scan] Stopping the camera failed: {ex.Message}");
+        }
+    }
 
     /// <summary>Parses "remotekm://ip:port" (or a bare "ip:port").</summary>
     private static bool TryParseEndpoint(string text, out string ip, out int port)
