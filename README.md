@@ -168,7 +168,7 @@ top number row and the punctuation keys.
 
 ## Licenses & credits
 
-- **Icons by Axialis** — https://www.axialis.com
+- **Logo and app icons** — made for RemoteKM; sources in `branding/`.
 
 Third-party NuGet packages and their licenses:
 

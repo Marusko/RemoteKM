@@ -258,8 +258,10 @@
         const ls = letters($('#intro-wordmark'), 'RemoteKM');
         ls.slice(6).forEach(l => l.classList.add('km-letter'));
         stagger(ls, s + 1.1, 0.06, (el, at) => enter(el, at, { y: 70, blur: 10 }, 0.7));
-        enter('#intro-pill', s + 2.3, { y: 24 }, 0.8);
+        enter('#name-meaning', s + 1.8, { y: 20, blur: 6 }, 0.8);
+        enter('#intro-pill', s + 2.5, { y: 24 }, 0.8);
         exit('.intro-logo', s + 5.2, { scale: 1.08, blur: 14 }, 0.7, 'inOut');
+        exit('#name-meaning', s + 5.15, { y: 14, blur: 8 }, 0.55);
         exit('#intro-pill', s + 5.1, { y: 20 }, 0.5);
     }
 

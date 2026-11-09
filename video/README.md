@@ -43,7 +43,7 @@ A render takes a few minutes, and you can run several at once.
 
 | Time | Scene |
 |---|---|
-| 0:00 | Logo and tagline |
+| 0:00 | Logo, "Remote Keyboard & Mouse" and the tagline |
 | 0:06 | "Control your PC from the couch. No cables." |
 | 0:13 | Connect: the phone finds the PC on the network, an IP typed by hand |
 | 0:18.7 | QR connect: "Show QR code" on the PC, the phone's scanner |
@@ -72,7 +72,7 @@ A render takes a few minutes, and you can run several at once.
 
 `render(t)` rebuilds the whole frame from the time alone, which is why scrubbing and frame-exact export work.
 
-The colours come from `RemoteKm.Client/Resources/Styles/Colors.xaml` and `RemoteKm.Host/Resources/HostTheme.xaml`. The logo in `assets/logo.svg` is drawn for the video. The Roboto font is vendored in `assets/` so the page renders offline. Host names, the phone's name, the photos and the music track in the Music window are made up.
+The colours come from `RemoteKm.Client/Resources/Styles/Colors.xaml` and `RemoteKm.Host/Resources/HostTheme.xaml`. `assets/logo.svg` is the app logo, copied from `branding/`. The Roboto font is vendored in `assets/` so the page renders offline. Host names, the phone's name, the photos and the music track in the Music window are made up.
 
 ## Music
 

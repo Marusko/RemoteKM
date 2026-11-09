@@ -140,7 +140,9 @@ public sealed class TrayIconManager : IDisposable
         var resourceName = $"RemoteKm.Host.Resources.{fileName}";
         using var stream = asm.GetManifestResourceStream(resourceName)
             ?? throw new InvalidOperationException($"Embedded icon '{resourceName}' not found.");
-        return new Icon(stream);
+        // Ask for the tray's own size (16 px at 100 %, 20 at 125 %, 24 at 150 %…) so Windows picks
+        // the matching image from the .ico instead of shrinking a larger one.
+        return new Icon(stream, WinForms.SystemInformation.SmallIconSize);
     }
 
     private static string Truncate(string value, int max)
