@@ -1,6 +1,6 @@
 # RemoteKM promo video
 
-A promotional video for RemoteKM, made with plain HTML, CSS and JavaScript. It runs 2:01 with music, in 1920×1080, with headlines and captions in English or Slovak.
+A promotional video for RemoteKM, made with plain HTML, CSS and JavaScript. It runs 2:01 with music (download it first, see [Music](#music)), in 1920×1080, with headlines and captions in English or Slovak.
 
 ## Watch it
 
@@ -78,6 +78,14 @@ The colours come from `RemoteKm.Client/Resources/Styles/Colors.xaml` and `Remote
 
 The track is "Energetic Breakbeat Powerful Action Rock" by [Alexey Kazantsev](https://pixabay.com/users/331music-40510117/) from Pixabay, used under the Pixabay Content License. The credit is shown faintly at the bottom of every frame.
 
-The file lives in `assets/` and is set by `MUSIC` near the top of the timeline in `video.js`. The track runs 2:12. Its drop hits at 1:51.9, after a breakdown that starts at 1:50.3, so the outro starts there. If you swap the track, move `T.outro` to the new track's drop.
+**The track is not in the repo.** Pixabay's license allows using it in a video, but not distributing the file on its own, unchanged, as a public repo would. Download it from [Alexey Kazantsev's Pixabay page](https://pixabay.com/users/331music-40510117/) (track ID 600481) and save it as:
+
+```
+video/assets/331music-energetic-breakbeat-powerful-action-rock-600481.mp3
+```
+
+`.gitignore` keeps it out of commits. Without it the page plays silently and `render.mjs` renders a silent video, with a warning. Rendered videos with the music in them are fine to publish.
+
+The file name is set by `MUSIC` near the top of the timeline in `video.js`. The track runs 2:12. Its drop hits at 1:51.9, after a breakdown that starts at 1:50.3, so the outro starts there. If you swap the track, move `T.outro` to the new track's drop.
 
 At the end, the music fades out over the last 2.5 seconds while the picture fades to black. This happens both in the browser and in `render.mjs` output.

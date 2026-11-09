@@ -112,7 +112,12 @@ try {
         const duration = await evaluate('window.__duration');
         const frames = Math.round(duration * fps);
         // The page names its music; it is cut to the video's length with the page's fade-out.
-        const music = args.mute ? null : await evaluate('window.__music');
+        let music = args.mute ? null : await evaluate('window.__music');
+        // The track isn't in the repo (see README.md, Music); without it the video renders silent.
+        if (music && !existsSync(join(here, music.src))) {
+            console.warn(`No music at ${music.src}; rendering without it. See README.md, Music.`);
+            music = null;
+        }
         const audio = music ? [
             '-i', join(here, music.src),
             '-filter_complex', `[1:a]atrim=0:${duration},afade=t=out:st=${duration - music.fadeOut}:d=${music.fadeOut}[a]`,
