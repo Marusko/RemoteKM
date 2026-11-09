@@ -11,8 +11,6 @@ public static class Attributions
         """
         RemoteKM - v1.1.0 - MS
 
-        Icons by Axialis — https://www.axialis.com
-
         This application includes the following third-party open-source components.
 
         — MIT-licensed components —

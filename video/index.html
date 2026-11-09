@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RemoteKM promo</title>
+    <link rel="icon" href="assets/logo.svg" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Icons, drawn after the Fluent UI symbols the apps use. <svg class="ic"><use href="#i-…"/></svg> -->
+<svg width="0" height="0" style="position:absolute">
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M6 3.5v15.2l4.1-3.9 2.7 6.1 2.8-1.2-2.7-6h5.6z"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M6.5 9.5h.01M9.5 9.5h.01M12.5 9.5h.01M15.5 9.5h.01M17.5 12.5h.01M6.5 12.5h.01M8 15h8"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2.5 12h4l2.5-6.5 4.5 13 3-6.5h5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v9"/><path d="M17.7 6.8a8 8 0 1 1-11.4 0"/></symbol>
+    <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m14.5 6-6 6 6 6"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9.5 6 6 6-6 6"/></symbol>
+    <symbol id="i-panel-l" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9.5 4v16"/></symbol>
+    <symbol id="i-panel-m" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 4v16"/></symbol>
+    <symbol id="i-panel-r" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M14.5 4v16"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 5v14"/><path d="M19 5.5v13L9 12z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7.5 5v14M16.5 5v14"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5v14"/><path d="M5 5.5v13L15 12z"/></symbol>
+    <symbol id="i-vol1" viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/></symbol>
+    <symbol id="i-vol2" viewBox="0 0 24 24"><path d="M3 9.5h3.5L11 5.5v13l-4.5-4H3z"/><path d="M14.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M17.5 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+    <symbol id="i-mute" viewBox="0 0 24 24"><path d="M3 9.5h3.5L11 5.5v13l-4.5-4H3z"/><path d="m15 9.5 5 5M20 9.5l-5 5"/></symbol>
+    <symbol id="i-backspace" viewBox="0 0 24 24"><path d="M8.5 5.5H20a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H8.5L2.5 12z"/><path d="m11 9.5 5 5M16 9.5l-5 5"/></symbol>
+    <symbol id="i-enter" viewBox="0 0 24 24"><path d="M19.5 5v6.5a2 2 0 0 1-2 2H5"/><path d="m9 9.5-4 4 4 4"/></symbol>
+    <symbol id="i-shift" viewBox="0 0 24 24"><path d="M12 3.5 3.5 12.5H8v7h8v-7h4.5z"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-min" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
+    <symbol id="i-max" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.5a9.5 9.5 0 0 1 13 0"/><path d="M8.7 16a5 5 0 0 1 6.6 0"/><path d="M12 19.5h.01"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7.5a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M6 3.5h9l4 4V20a.5.5 0 0 1-.5.5h-12A.5.5 0 0 1 6 20z"/><path d="M14.5 3.5v4.5H19M9 12h7M9 15.5h7"/></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5.5l11-2v12.5"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-chev-up" viewBox="0 0 24 24"><path d="m6 14.5 6-6 6 6"/></symbol>
+    <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2.5" y="7.5" width="17" height="9" rx="2"/><path d="M21.5 10.5v3"/><path d="M5.5 10.5h9v3h-9z"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="m8.2 13.2 7.6 4.1M15.8 6.7 8.2 10.8"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11.5V5a1.5 1.5 0 0 1 3 0v6"/><path d="M12 10.5V4a1.5 1.5 0 0 1 3 0v6.5"/><path d="M15 10.5V6a1.5 1.5 0 0 1 3 0v8.5a6.5 6.5 0 0 1-6.5 6.5h-.5a6 6 0 0 1-4.8-2.4l-2.9-4a1.6 1.6 0 0 1 2.4-2.1L9 15"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 3.5 9A14 14 0 0 1 12 21a14 14 0 0 1-3.5-9A14 14 0 0 1 12 3z"/></symbol>
+    <symbol id="i-fn" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M8 15.5v-7h3.5M8 12h3"/><path d="M14 15.5v-5M14 12.5a2 2 0 0 1 4 0v3"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><path d="M7.8 16.2a6 6 0 0 1 0-8.4M16.2 7.8a6 6 0 0 1 0 8.4"/><path d="M4.9 19.1a10 10 0 0 1 0-14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM14 19.5v1M20.5 14v1.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.5 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5 7.5-9.5V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-tray" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M15.5 13.5h3"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v12M7 10.5l5 5 5-5"/><path d="M4 17.5v1.5a1.5 1.5 0 0 0 1.5 1.5h13a1.5 1.5 0 0 0 1.5-1.5v-1.5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></symbol>
+    <symbol id="i-pc" viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="13" rx="2"/><path d="M8 20.5h8M12 16.5v4"/></symbol>
+</svg>
+
+<div id="viewport">
+    <div id="stage">
+
+        <!-- Background shared by every scene: glows, a dot grid and slow signal ripples. -->
+        <div class="bg">
+            <div class="bg-glow bg-glow-a"></div>
+            <div class="bg-glow bg-glow-b"></div>
+            <div class="bg-grid"></div>
+            <svg class="bg-waves" viewBox="0 0 1920 1080"></svg>
+        </div>
+
+        <!-- 1. Intro -->
+        <section class="scene" id="s-intro">
+            <div class="intro-logo">
+                <img class="intro-icon" src="assets/logo.svg" alt="" />
+                <h1 class="wordmark" id="intro-wordmark"></h1>
+            </div>
+            <p class="name-meaning" id="name-meaning">Remote <b>K</b>eyboard &amp; <b>M</b>ouse</p>
+            <span class="pill" id="intro-pill"><span class="live-dot"></span><span data-t="tagline"></span></span>
+        </section>
+
+        <!-- 2. Hook -->
+        <section class="scene" id="s-hook">
+            <h2 class="hook-title">
+                <span class="hook-line" data-t="hook1"></span>
+                <span class="hook-line" data-t="hook2"></span>
+                <span class="hook-line accent" data-t="hook3"></span>
+            </h2>
+            <p class="hook-sub" data-t="hookSub"></p>
+            <ul class="hook-bullets">
+                <li><svg class="ic"><use href="#i-check"/></svg><span data-t="bullet1"></span></li>
+                <li><svg class="ic"><use href="#i-check"/></svg><span data-t="bullet2"></span></li>
+                <li><svg class="ic"><use href="#i-check"/></svg><span data-t="bullet3"></span></li>
+            </ul>
+        </section>
+
+        <!-- 3. The rig: a PC and the phone that drives it. Connect, trackpad, keyboard, phone app. -->
+        <section class="scene" id="s-rig">
+            <div class="captions" id="rig-captions"></div>
+
+            <!-- The PC -->
+            <div class="monitor" id="monitor">
+                <div class="monitor-screen">
+                    <div class="pc" id="pc">
+                        <div class="wallpaper"><i class="wp-a"></i><i class="wp-b"></i><i class="wp-c"></i></div>
+
+                        <div class="desk-icons">
+                            <div class="desk-icon" id="icon-photos"><span class="di di-folder"><svg class="ic"><use href="#i-folder"/></svg></span>Holiday photos</div>
+                            <div class="desk-icon"><span class="di di-note"><svg class="ic"><use href="#i-note"/></svg></span>Notes</div>
+                            <div class="desk-icon"><span class="di di-music"><svg class="ic"><use href="#i-music"/></svg></span>Music</div>
+                        </div>
+
+                        <!-- Music player (behind the others until Alt+Tab brings it forward) -->
+                        <div class="win win-music" id="w-music">
+                            <div class="win-bar"><span class="win-title"><svg class="ic"><use href="#i-music"/></svg>Music</span><span class="win-ctl"><svg class="ic"><use href="#i-min"/></svg><svg class="ic"><use href="#i-max"/></svg><svg class="ic"><use href="#i-x"/></svg></span></div>
+                            <div class="music-body">
+                                <div class="album"><div class="eq" id="eq"><i></i><i></i><i></i><i></i><i></i></div></div>
+                                <div class="music-info">
+                                    <strong>Night Drive</strong>
+                                    <span>Neon Avenue · Synthwave Mix</span>
+                                    <div class="music-bar"><b id="music-fill"></b></div>
+                                    <div class="music-times"><span id="music-time">1:12</span><span>3:48</span></div>
+                                    <div class="music-btns"><svg class="ic"><use href="#i-prev"/></svg><span class="music-play"><svg class="ic" id="music-play-ic"><use href="#i-play"/></svg></span><svg class="ic"><use href="#i-next"/></svg></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Photos, opened from the desktop icon -->
+                        <div class="win win-photos" id="w-photos">
+                            <div class="win-bar"><span class="win-title"><svg class="ic"><use href="#i-folder"/></svg>Holiday photos</span><span class="win-ctl"><svg class="ic"><use href="#i-min"/></svg><svg class="ic"><use href="#i-max"/></svg><svg class="ic"><use href="#i-x"/></svg></span></div>
+                            <div class="photos-view"><div class="photos-grid" id="photos-grid"></div></div>
+                        </div>
+
+                        <!-- Notes, for typing -->
+                        <div class="win win-notes" id="w-notes">
+                            <div class="win-bar"><span class="win-title"><svg class="ic"><use href="#i-note"/></svg>Notes — Untitled</span><span class="win-ctl"><svg class="ic"><use href="#i-min"/></svg><svg class="ic"><use href="#i-max"/></svg><svg class="ic"><use href="#i-x"/></svg></span></div>
+                            <div class="notes-menu"><span>File</span><span>Edit</span><span>View</span></div>
+                            <div class="notes-text"><span id="notes-text"></span><i class="caret"></i></div>
+                        </div>
+
+                        <!-- Right-click menu -->
+                        <div class="ctx" id="ctx">
+                            <span class="ctx-item" id="ctx-open">Open</span>
+                            <span class="ctx-item">Open in new window</span>
+                            <span class="ctx-sep"></span>
+                            <span class="ctx-item">Copy</span>
+                            <span class="ctx-item">Rename</span>
+                            <span class="ctx-item">Properties</span>
+                        </div>
+
+                        <!-- RemoteKM: QR window -->
+                        <div class="rk-win rk-qr" id="w-qr">
+                            <div class="rk-bar"><img src="assets/logo.svg" alt="" />RemoteKM — Connect via QR<span class="win-ctl"><svg class="ic"><use href="#i-x"/></svg></span></div>
+                            <div class="rk-body">
+                                <p class="rk-title"><i></i>Scan to connect</p>
+                                <div class="qr-box"><div class="qr" id="qr-pc"></div></div>
+                                <p class="rk-caption">remotekm://192.168.1.20:45455</p>
+                            </div>
+                        </div>
+
+                        <!-- RemoteKM: pairing request -->
+                        <div class="rk-win rk-pair" id="w-pair">
+                            <div class="rk-bar"><img src="assets/logo.svg" alt="" />RemoteKM — Pairing request<span class="win-ctl"><svg class="ic"><use href="#i-x"/></svg></span></div>
+                            <div class="rk-body">
+                                <p class="rk-title"><i></i>Pairing request</p>
+                                <p class="rk-msg">'Pixel 8' (192.168.1.34) wants to control this PC.</p>
+                                <p class="rk-caption" id="pair-countdown"></p>
+                                <div class="rk-btns"><span class="rk-btn rk-btn-ok" id="pair-accept">Accept</span><span class="rk-btn rk-btn-danger">Reject</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Alt+Tab switcher -->
+                        <div class="alttab" id="alttab">
+                            <div class="alttab-card" data-k="notes"><div class="alttab-thumb thumb-notes"><i></i><i></i><i></i></div><span><svg class="ic"><use href="#i-note"/></svg>Notes</span></div>
+                            <div class="alttab-card" data-k="photos"><div class="alttab-thumb thumb-photos"><i></i><i></i><i></i><i></i><i></i><i></i></div><span><svg class="ic"><use href="#i-folder"/></svg>Holiday photos</span></div>
+                            <div class="alttab-card" data-k="music"><div class="alttab-thumb thumb-music"><i></i></div><span><svg class="ic"><use href="#i-music"/></svg>Music</span></div>
+                        </div>
+
+                        <!-- System flyouts -->
+                        <div class="flyout lang-flyout" id="lang-flyout"><b>SK</b><span><strong>Slovak</strong><small>Slovak (QWERTZ)</small></span></div>
+                        <div class="flyout vol-flyout" id="vol-flyout"><svg class="ic"><use href="#i-vol2"/></svg><div class="vol-track"><b id="vol-fill"></b></div><span id="vol-num">40</span></div>
+                        <div class="flyout media-flyout" id="media-flyout"><span class="mf-art"></span><span><strong>Night Drive</strong><small>Neon Avenue</small></span><svg class="ic"><use href="#i-pause"/></svg></div>
+
+                        <!-- Notification -->
+                        <div class="pc-toast" id="pc-toast">
+                            <img src="assets/logo.svg" alt="" />
+                            <span><strong>RemoteKM</strong><small>'Pixel 8' is now trusted and connected.</small></span>
+                        </div>
+
+                        <div class="taskbar"><span class="tb-apps"><svg class="ic"><use href="#i-grid"/></svg><svg class="ic"><use href="#i-search"/></svg><svg class="ic"><use href="#i-folder"/></svg><svg class="ic"><use href="#i-note"/></svg><svg class="ic"><use href="#i-music"/></svg></span></div>
+
+                        <svg class="cursor" id="pc-cursor" viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.6-4.4 3 6.9 3.1-1.3-3-6.8h6.4z"/></svg>
+                    </div>
+                </div>
+                <div class="monitor-chin"></div>
+                <div class="monitor-neck"></div>
+                <div class="monitor-foot"></div>
+            </div>
+
+            <!-- The phone, in landscape, as the app runs -->
+            <div class="phone" id="phone">
+                <div class="phone-cam"></div>
+                <div class="ph" id="ph">
+
+                    <!-- Discovery -->
+                    <div class="pg pg-discovery" id="pg-discovery">
+                        <div class="disc-col">
+                            <p class="disc-head">Hosts on your network</p>
+                            <div class="disc-empty" id="disc-empty"><span class="spinner"></span><span>Searching for hosts on your network…</span></div>
+                            <div class="rk-card host" id="host-1"><i class="dot on"></i><span><b>LIVING-ROOM-PC</b><small>192.168.1.20:45455</small><small class="tiny">Seen just now</small></span><em>›</em></div>
+                            <div class="rk-card host" id="host-2"><i class="dot"></i><span><b>STUDIO-LAPTOP</b><small>192.168.1.47:45455</small><small class="tiny">Seen 3 min ago</small></span><em>›</em></div>
+                        </div>
+                        <div class="rk-card disc-panel">
+                            <p class="disc-head">Connect manually</p>
+                            <span class="entry"><span id="ip-text"></span><span class="ph-hint" id="ip-hint">Host IP (e.g. 192.168.1.20)</span></span>
+                            <span class="entry"><span id="port-text"></span><span class="ph-hint" id="port-hint">Port</span></span>
+                            <span class="mbtn mbtn-primary">Connect</span>
+                            <span class="mbtn mbtn-ghost" id="btn-scan">Scan QR code</span>
+                            <small class="tiny">Tip: open “Show QR Code” from the host's tray icon.</small>
+                        </div>
+                    </div>
+
+                    <!-- QR scanner -->
+                    <div class="pg pg-scan" id="pg-scan">
+                        <div class="cam" id="cam">
+                            <div class="cam-scene" id="cam-scene">
+                                <div class="cam-monitor"><div class="qr-box qr-box-cam"><div class="qr" id="qr-cam"></div></div></div>
+                            </div>
+                            <div class="cam-frame" id="cam-frame"><i></i><i></i><i></i><i></i></div>
+                            <div class="cam-line" id="cam-line"></div>
+                        </div>
+                        <div class="scan-bar"><span>Point the camera at the host's QR code</span><span class="mbtn mbtn-ghost">Cancel</span></div>
+                    </div>
+
+                    <!-- Connected shell: nav rail + content -->
+                    <div class="pg pg-shell" id="pg-shell">
+                        <div class="rail" id="rail">
+                            <span class="nav nav-collapse" id="nav-collapse"><svg class="ic"><use href="#i-chev-l"/></svg></span>
+                            <span class="nav" id="nav-0"><svg class="ic"><use href="#i-cursor"/></svg></span>
+                            <span class="nav" id="nav-1"><svg class="ic"><use href="#i-keyboard"/></svg></span>
+                            <span class="nav" id="nav-2"><svg class="ic"><use href="#i-pulse"/></svg></span>
+                            <span class="nav nav-power"><svg class="ic"><use href="#i-power"/></svg></span>
+                        </div>
+                        <div class="content" id="content">
+
+                            <!-- Trackpad -->
+                            <div class="view v-trackpad" id="v-trackpad">
+                                <div class="tp-main">
+                                    <div class="surface" id="surface">
+                                        <div class="tp-hint" id="tp-hint">
+                                            <svg class="ic"><use href="#i-cursor"/></svg>
+                                            <span>Drag to move · tap to click</span>
+                                            <small>two fingers to scroll · two-finger tap = right click</small>
+                                            <small>hold then drag to select · three-finger tap = middle click</small>
+                                        </div>
+                                    </div>
+                                    <div class="mouse-btns">
+                                        <span class="mouse-btn" id="mb-0"><svg class="ic"><use href="#i-panel-l"/></svg></span>
+                                        <span class="mouse-btn" id="mb-1"><svg class="ic"><use href="#i-panel-m"/></svg></span>
+                                        <span class="mouse-btn" id="mb-2"><svg class="ic"><use href="#i-panel-r"/></svg></span>
+                                    </div>
+                                </div>
+                                <div class="speed">
+                                    <span>Speed</span>
+                                    <div class="slider"><b id="speed-fill"></b><i id="speed-thumb"></i></div>
+                                    <span class="speed-val" id="speed-val">1.0x</span>
+                                </div>
+                            </div>
+
+                            <!-- Keyboard -->
+                            <div class="view v-keyboard" id="v-keyboard">
+                                <div class="kb-head">
+                                    <span class="kb-layout" id="kb-layout">EN · QWERTY</span>
+                                    <span class="kb-media" id="kb-media-prev"><svg class="ic"><use href="#i-prev"/></svg></span>
+                                    <span class="kb-media" id="kb-media-play"><svg class="ic"><use href="#i-play"/></svg></span>
+                                    <span class="kb-media"><svg class="ic"><use href="#i-next"/></svg></span>
+                                    <span class="kb-media"><svg class="ic"><use href="#i-vol1"/></svg></span>
+                                    <span class="kb-media"><svg class="ic"><use href="#i-vol2"/></svg></span>
+                                    <span class="kb-media"><svg class="ic"><use href="#i-mute"/></svg></span>
+                                </div>
+                                <div class="kb" id="kb"></div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="view v-status" id="v-status">
+                                <div class="rk-card st-conn"><small>CONNECTED TO</small><b>LIVING-ROOM-PC</b></div>
+                                <div class="st-grid">
+                                    <div class="rk-card"><small>LATENCY</small><b class="teal" id="st-latency">4 ms</b></div>
+                                    <div class="rk-card"><small>UPTIME</small><b id="st-uptime">00:00:00</b></div>
+                                    <div class="rk-card"><small>SENT</small><b id="st-sent">0 B</b></div>
+                                    <div class="rk-card"><small>RECEIVED</small><b id="st-recv">0 B</b></div>
+                                </div>
+                                <div class="st-btns"><span class="mbtn mbtn-ghost" id="btn-export">Export logs</span><span class="mbtn mbtn-ghost">Licenses</span><span class="mbtn mbtn-danger">Disconnect</span></div>
+                            </div>
+                        </div>
+                        <span class="float-expand" id="float-expand"><svg class="ic"><use href="#i-chev-r"/></svg></span>
+                    </div>
+
+                    <!-- Connecting overlay -->
+                    <div class="connecting" id="connecting"><span class="spinner"></span><span>Connecting…</span></div>
+
+                    <!-- Android share sheet, from Export logs -->
+                    <div class="sheet" id="sheet">
+                        <p><b>Share</b> RemoteKM logs · remotekm.log</p>
+                        <div class="sheet-apps"><i style="background:#4f8cf7"></i><i style="background:#2ec27e"></i><i style="background:#f0a93f"></i><i style="background:#ff5c72"></i><i style="background:#9aa0c0"></i></div>
+                    </div>
+
+                    <div class="touches" id="touches"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. The PC app: tray menu and settings -->
+        <section class="scene" id="s-tray">
+            <div class="captions" id="tray-captions"></div>
+            <div class="desk" id="desk">
+                <div class="wallpaper"><i class="wp-a"></i><i class="wp-b"></i><i class="wp-c"></i></div>
+
+                <div class="rk-win rk-settings" id="w-settings">
+                    <div class="rk-bar"><img src="assets/logo.svg" alt="" />RemoteKM — Settings<span class="win-ctl"><svg class="ic"><use href="#i-x"/></svg></span></div>
+                    <div class="rk-body">
+                        <p class="rk-title"><i></i>Settings</p>
+                        <p class="rk-listen">Listening on 192.168.1.20:45455</p>
+                        <p class="rk-caption">Control port (1024–65535)</p>
+                        <span class="rk-input" id="set-port">45455</span>
+                        <span class="rk-check" id="chk-auto"><i><svg class="ic"><use href="#i-check"/></svg></i>Auto-start with Windows</span>
+                        <span class="rk-check" id="chk-admin"><i><svg class="ic"><use href="#i-check"/></svg></i>Run as administrator at startup</span>
+                        <span class="rk-check" id="chk-confirm"><i><svg class="ic"><use href="#i-check"/></svg></i>Require confirmation for new clients</span>
+                        <span class="rk-check" id="chk-reverse"><i><svg class="ic"><use href="#i-check"/></svg></i>Reverse scroll direction</span>
+                        <p class="rk-caption">Logs &amp; data</p>
+                        <div class="rk-btns"><span class="rk-btn">Open logs folder</span><span class="rk-btn">About &amp; licenses</span></div>
+                        <span class="rk-btn rk-btn-danger rk-btn-wide" id="set-wipe">Remove all data &amp; settings…</span>
+                        <div class="rk-btns rk-btns-end"><span class="rk-btn">Cancel</span><span class="rk-btn rk-btn-accent" id="set-save">Save</span></div>
+                    </div>
+                </div>
+
+                <div class="tray-menu" id="tray-menu">
+                    <span class="tm-item tm-off">1 client(s) connected</span>
+                    <span class="tm-sep"></span>
+                    <span class="tm-item">Connected clients…</span>
+                    <span class="tm-item">Trusted devices…</span>
+                    <span class="tm-sep"></span>
+                    <span class="tm-item">Show QR code</span>
+                    <span class="tm-item">Disconnect all</span>
+                    <span class="tm-item" id="tm-settings">Settings…</span>
+                    <span class="tm-sep"></span>
+                    <span class="tm-item">Exit</span>
+                </div>
+                <div class="tray-tip" id="tray-tip">RemoteKM — 1 connected</div>
+
+                <div class="taskbar taskbar-big">
+                    <span class="tb-apps"><svg class="ic"><use href="#i-grid"/></svg><svg class="ic"><use href="#i-search"/></svg><svg class="ic"><use href="#i-folder"/></svg><svg class="ic"><use href="#i-note"/></svg><svg class="ic"><use href="#i-music"/></svg></span>
+                    <span class="tb-tray">
+                        <svg class="ic"><use href="#i-chev-up"/></svg>
+                        <span class="tray-icon" id="tray-icon"><svg class="ic"><use href="#i-keyboard"/></svg></span>
+                        <svg class="ic"><use href="#i-wifi"/></svg>
+                        <svg class="ic"><use href="#i-vol2"/></svg>
+                        <svg class="ic"><use href="#i-battery"/></svg>
+                        <span class="tb-clock">21:14<small>9. 11. 2026</small></span>
+                    </span>
+                </div>
+                <svg class="cursor cursor-big" id="desk-cursor" viewBox="0 0 24 24"><path d="M5 2.5v17.2l4.6-4.4 3 6.9 3.1-1.3-3-6.8h6.4z"/></svg>
+            </div>
+        </section>
+
+        <!-- 5. Feature grid -->
+        <section class="scene" id="s-grid">
+            <header class="section-head">
+                <p class="eyebrow" data-t="gridEyebrow"></p>
+                <h2 data-t="gridTitle"></h2>
+            </header>
+            <div class="grid" id="feature-grid"></div>
+        </section>
+
+        <!-- 6. Stats -->
+        <section class="scene" id="s-stats">
+            <div class="stats">
+                <div class="stat"><b>1<small>.exe</small></b><span data-t="statPc"></span></div>
+                <div class="stat"><b>1<small>.apk</small></b><span data-t="statPhone"></span></div>
+                <div class="stat"><b id="stat-accounts">0</b><span data-t="statAccounts"></span></div>
+                <div class="stat"><b id="stat-cables">0</b><span data-t="statCables"></span></div>
+            </div>
+            <div class="reqs" id="reqs">
+                <span class="req"><svg class="ic"><use href="#i-pc"/></svg><span data-t="reqWin"></span></span>
+                <span class="req"><svg class="ic"><use href="#i-phone"/></svg><span data-t="reqAndroid"></span></span>
+                <span class="req"><svg class="ic"><use href="#i-wifi"/></svg><span data-t="reqWifi"></span></span>
+            </div>
+        </section>
+
+        <!-- 7. Outro -->
+        <section class="scene" id="s-outro">
+            <div class="outro-logo" id="outro-logo">
+                <img class="outro-icon" src="assets/logo.svg" alt="" />
+                <span class="wordmark wordmark-sm">Remote<span class="km">KM</span></span>
+            </div>
+            <h2 class="outro-title" id="outro-title" data-t="ctaTitle"></h2>
+            <p class="outro-sub" id="outro-sub" data-t="ctaSub"></p>
+            <span class="cta" id="outro-cta"><svg class="ic"><use href="#i-download"/></svg><span data-t="ctaButton"></span></span>
+            <p class="outro-url" id="outro-url">github.com/Marusko/RemoteKM</p>
+        </section>
+
+        <div class="watermark" id="watermark"><img src="assets/logo.svg" alt="" />RemoteKM</div>
+
+        <p class="credit">Music by <a href="https://pixabay.com/users/331music-40510117/">Alexey Kazantsev</a> from <a href="https://pixabay.com/music/">Pixabay</a></p>
+
+        <div class="fade-out" id="fade-out"></div>
+    </div>
+</div>
+
+<audio id="music" preload="auto"></audio>
+
+<div id="controls">
+    <button id="btn-play" title="Play / pause (Space)">
+        <svg viewBox="0 0 24 24" class="i-play"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        <svg viewBox="0 0 24 24" class="i-pause"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    </button>
+    <button id="btn-restart" title="Restart (R)">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+    <input id="scrub" type="range" min="0" max="1000" step="0.1" value="0" />
+    <span id="time">0:00 / 0:00</span>
+    <button id="btn-mute" title="Mute / unmute (M)">♪</button>
+    <a id="btn-lang" class="ctl" title="Switch language"></a>
+    <button id="btn-record" title="Record this tab to a WebM file">● Record</button>
+    <button id="btn-full" title="Fullscreen (F)">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    </button>
+</div>
+
+<script src="strings.js"></script>
+<script src="video.js"></script>
+</body>
+</html>

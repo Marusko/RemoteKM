@@ -1,0 +1,7 @@
+# Rendered output: regenerate with `node render.mjs`.
+*.mp4
+*.webm
+still-*.png
+
+# The music track can't be redistributed on its own (Pixabay Content License); see README.md, Music.
+assets/*.mp3

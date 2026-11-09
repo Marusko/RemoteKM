@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="456" height="456" viewBox="0 0 456 456">
+    <!-- Adaptive icon foreground: the keyboard and pointer from branding/logo.svg, sized to stay
+         inside the launcher's safe zone (the middle 66 of 108 dp). -->
+    <g transform="translate(88.85 69.3) scale(2.3)">
+        <rect x="16" y="32" width="76" height="48" rx="9" fill="none" stroke="#fff" stroke-width="6" />
+        <g fill="#fff">
+            <rect x="27" y="43" width="8" height="7" rx="2" />
+            <rect x="40" y="43" width="8" height="7" rx="2" />
+            <rect x="53" y="43" width="8" height="7" rx="2" />
+            <rect x="66" y="43" width="8" height="7" rx="2" />
+            <rect x="33" y="64" width="34" height="6" rx="3" />
+        </g>
+        <path d="M71 55 L71 101 L82 90 L89 106 L97 102.5 L90 87 L105 87 Z" fill="#00D2A8" stroke="#2a1f8a" stroke-width="4" stroke-linejoin="round" />
+    </g>
+</svg>
