@@ -4,7 +4,9 @@ A promotional video for RemoteKM, made with plain HTML, CSS and JavaScript. It r
 
 ## Watch it
 
-Open `index.html` in Chrome or Edge.
+The rendered English video is at <https://download.susky.net/remotekm-promo-en.mp4>, linked from the main README through `poster.jpg`. To redo the poster, save the frame at second 3 with `node render.mjs --stills 3` and scale it to 1280 px wide (`ffmpeg -i still-en-3.png -vf scale=1280:-1 -q:v 3 poster.jpg`).
+
+To watch it locally, open `index.html` in Chrome or Edge.
 
 Keyboard: Space plays and pauses, the arrow keys jump 5 seconds, R restarts, M mutes the music and F goes fullscreen. The **SK/EN** button switches the language. While the video plays, the controls hide when the mouse is still.
 

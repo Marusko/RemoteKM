@@ -3,6 +3,10 @@
 RemoteKm lets you control your Windows PC from your Android phone over your home Wi-Fi.
 Use your phone as a trackpad and a full keyboard — no cables, no internet, no account.
 
+[![Watch the RemoteKM promo video (2 min)](video/poster.jpg)](https://download.susky.net/remotekm-promo-en.mp4)
+
+▶ **[Watch the 2-minute video](https://download.susky.net/remotekm-promo-en.mp4)**
+
 ---
 
 ## What you need
